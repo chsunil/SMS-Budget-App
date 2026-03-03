@@ -1,0 +1,70 @@
+// ─── Ionic CSS Variables Override ───────────────
+// Maps Ionic's system to our design tokens
+
+:root {
+  --ion-background-color: #0b0f1a;
+  --ion-background-color-rgb: 11, 15, 26;
+  --ion-text-color: #f0f4ff;
+  --ion-text-color-rgb: 240, 244, 255;
+
+  --ion-color-primary: #f5c842;
+  --ion-color-primary-rgb: 245, 200, 66;
+  --ion-color-primary-contrast: #0b0f1a;
+  --ion-color-primary-contrast-rgb: 11, 15, 26;
+  --ion-color-primary-shade: #d8b03a;
+  --ion-color-primary-tint: #f6ce55;
+
+  --ion-color-secondary: #60a5fa;
+  --ion-color-secondary-rgb: 96, 165, 250;
+  --ion-color-secondary-contrast: #0b0f1a;
+  --ion-color-secondary-shade: #5491dc;
+  --ion-color-secondary-tint: #70aefb;
+
+  --ion-color-tertiary: #3ecf8e;
+  --ion-color-tertiary-rgb: 62, 207, 142;
+  --ion-color-tertiary-contrast: #0b0f1a;
+  --ion-color-tertiary-shade: #37b87e;
+  --ion-color-tertiary-tint: #51d499;
+
+  --ion-color-success: #3ecf8e;
+  --ion-color-success-rgb: 62, 207, 142;
+  --ion-color-success-contrast: #0b0f1a;
+  --ion-color-success-shade: #37b87e;
+  --ion-color-success-tint: #51d499;
+
+  --ion-color-warning: #f5c842;
+  --ion-color-warning-rgb: 245, 200, 66;
+  --ion-color-warning-contrast: #0b0f1a;
+  --ion-color-warning-shade: #d8b03a;
+  --ion-color-warning-tint: #f6ce55;
+
+  --ion-color-danger: #f56565;
+  --ion-color-danger-rgb: 245, 101, 101;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-shade: #d85a5a;
+  --ion-color-danger-tint: #f67474;
+
+  --ion-color-dark: #131929;
+  --ion-color-dark-rgb: 19, 25, 41;
+  --ion-color-dark-contrast: #f0f4ff;
+  --ion-color-dark-shade: #111724;
+  --ion-color-dark-tint: #2b3448;
+
+  --ion-color-medium: #7b8bab;
+  --ion-color-medium-rgb: 123, 139, 171;
+  --ion-color-medium-contrast: #0b0f1a;
+  --ion-color-medium-shade: #6c7a97;
+  --ion-color-medium-tint: #8897b3;
+
+  --ion-color-light: #1a2236;
+  --ion-color-light-rgb: 26, 34, 54;
+  --ion-color-light-contrast: #f0f4ff;
+  --ion-color-light-shade: #17203d;
+  --ion-color-light-tint: #1f2d4a;
+
+  --ion-font-family: 'DM Sans', sans-serif;
+  --ion-border-color: rgba(255, 255, 255, 0.06);
+  --ion-item-background: transparent;
+  --ion-toolbar-background: #0b0f1a;
+  --ion-tab-bar-background: #131929;
+}

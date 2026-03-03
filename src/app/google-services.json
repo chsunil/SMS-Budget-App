@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "759579321832",
+    "firebase_url": "https://api-project-759579321832.firebaseio.com",
+    "project_id": "api-project-759579321832",
+    "storage_bucket": "api-project-759579321832.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759579321832:android:d09e33cc93db1a918b305d",
+        "android_client_info": {
+          "package_name": "com.psd2web.smsbudget"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSwQ1GLy-keK1qjixQeWo-n77fGYMSS4o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

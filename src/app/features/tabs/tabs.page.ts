@@ -1,0 +1,50 @@
+// ─── src/app/features/tabs/tabs.page.ts ─────────
+import { Component } from '@angular/core';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
+
+@Component({
+  selector: 'app-tabs',
+  standalone: true,
+  imports: [IonicModule, RouterModule],
+  template: `
+    <ion-tabs>
+      <ion-tab-bar slot="bottom">
+
+        <ion-tab-button tab="dashboard" href="/tabs/dashboard">
+          <ion-icon name="grid-outline"></ion-icon>
+          <ion-label>Budget</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="transactions" href="/tabs/transactions">
+          <ion-icon name="layers-outline"></ion-icon>
+          <ion-label>Txns</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="sms" href="/tabs/sms">
+          <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+          <ion-label>SMS</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="reports" href="/tabs/reports">
+          <ion-icon name="trending-up-outline"></ion-icon>
+          <ion-label>Reports</ion-label>
+        </ion-tab-button>
+
+        <ion-tab-button tab="settings" href="/tabs/settings">
+          <ion-icon name="person-circle-outline"></ion-icon>
+          <ion-label>Profile</ion-label>
+        </ion-tab-button>
+
+      </ion-tab-bar>
+    </ion-tabs>
+  `,
+  styles: [`
+    ion-tab-bar {
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-top: 8px;
+      height: calc(64px + env(safe-area-inset-bottom));
+    }
+  `]
+})
+export class TabsPage {}
