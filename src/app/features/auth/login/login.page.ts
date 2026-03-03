@@ -1,4 +1,4 @@
-// ─── src/app/features/auth/login/login.page.ts ──
+// ─── Updated Login Page with Modern Gradient UI ─
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,195 +12,438 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [CommonModule, FormsModule, IonicModule, RouterModule],
   template: `
     <ion-content [fullscreen]="true">
-      <div class="auth-wrap">
+      <div class="auth-background">
+        <div class="gradient-blob blob-1"></div>
+        <div class="gradient-blob blob-2"></div>
+      </div>
 
+      <div class="auth-wrap">
         <!-- Logo & Brand -->
-        <div class="brand">
-          <div class="brand-icon">₹</div>
-          <h1 class="display-title">SMS Budget</h1>
-          <p class="muted">Smart money. Automatically tracked.</p>
+        <div class="brand animate-fade-up">
+          <div class="brand-icon">
+            <span class="icon-text">₹</span>
+          </div>
+          <h1 class="brand-title gradient-text">SMS Budget</h1>
+          <p class="brand-subtitle">Smart money tracking, automated</p>
         </div>
 
         <!-- Login Form -->
-        <div class="auth-card">
-          <h2 class="form-title">Welcome back</h2>
-          <p class="muted" style="font-size:13px;margin-bottom:24px">Sign in to your account</p>
+        <div class="auth-card animate-fade-up" style="animation-delay: 0.1s">
+          <div class="card-header">
+            <h2 class="card-title">Welcome back!</h2>
+            <p class="card-subtitle">Sign in to continue managing your budget</p>
+          </div>
 
           <div class="field-group">
-            <label class="field-label">Email</label>
+            <label class="field-label">
+              <ion-icon name="mail-outline"></ion-icon>
+              Email Address
+            </label>
             <div class="input-wrap">
-              <ion-icon name="mail-outline" class="input-icon"></ion-icon>
               <input
                 type="email"
                 [(ngModel)]="email"
                 placeholder="you@example.com"
-                class="auth-input"
+                class="modern-input"
                 autocomplete="email"
+                (keyup.enter)="login()"
               />
             </div>
           </div>
 
           <div class="field-group">
-            <label class="field-label">Password</label>
+            <label class="field-label">
+              <ion-icon name="lock-closed-outline"></ion-icon>
+              Password
+            </label>
             <div class="input-wrap">
-              <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
               <input
                 [type]="showPass ? 'text' : 'password'"
                 [(ngModel)]="password"
-                placeholder="••••••••"
-                class="auth-input"
+                placeholder="Enter your password"
+                class="modern-input"
                 autocomplete="current-password"
+                (keyup.enter)="login()"
               />
-              <ion-icon
-                [name]="showPass ? 'eye-off-outline' : 'eye-outline'"
-                class="input-icon-end"
-                (click)="showPass = !showPass">
-              </ion-icon>
+              <button class="toggle-pass" (click)="showPass = !showPass" type="button">
+                <ion-icon [name]="showPass ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+              </button>
             </div>
           </div>
 
           <div class="forgot-wrap">
-            <span class="forgot-link" (click)="forgotPassword()">Forgot password?</span>
+            <span class="forgot-link" (click)="forgotPassword()">
+              <ion-icon name="key-outline"></ion-icon>
+              Forgot password?
+            </span>
           </div>
 
-          <button class="auth-btn primary" (click)="login()" [disabled]="loading">
-            <span *ngIf="!loading">Sign In</span>
-            <ion-spinner *ngIf="loading" name="crescent" style="width:20px;height:20px"></ion-spinner>
+          <button class="gradient-btn" (click)="login()" [disabled]="loading || !email || !password">
+            <span *ngIf="!loading" class="btn-content">
+              <ion-icon name="log-in-outline"></ion-icon>
+              Sign In
+            </span>
+            <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
           </button>
         </div>
 
         <!-- Register Link -->
-        <div class="auth-footer">
-          Don't have an account?
-          <span class="auth-link" routerLink="/auth/register"> Create one</span>
+        <div class="auth-footer animate-fade-up" style="animation-delay: 0.2s">
+          <p class="footer-text">
+            Don't have an account?
+            <span class="footer-link" routerLink="/auth/register">Create one free</span>
+          </p>
         </div>
-
       </div>
     </ion-content>
   `,
   styles: [`
-    ion-content { --background: var(--bg); }
+    ion-content {
+      --background: var(--bg);
+    }
+
+    .auth-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .gradient-blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.3;
+      animation: float 20s infinite;
+    }
+
+    .blob-1 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      top: -200px;
+      right: -100px;
+    }
+
+    .blob-2 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(135deg, var(--accent), var(--primary));
+      bottom: -150px;
+      left: -100px;
+      animation-delay: -10s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
     .auth-wrap {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 32px 24px;
-      max-width: 420px;
+      padding: 40px 24px;
+      max-width: 440px;
       margin: 0 auto;
+      position: relative;
+      z-index: 1;
     }
+
     .brand {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 40px;
     }
+
     .brand-icon {
-      width: 64px; height: 64px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, var(--accent), var(--orange));
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display);
-      font-size: 28px;
-      font-weight: 800;
-      color: #0b0f1a;
-      margin: 0 auto 16px;
-      box-shadow: var(--shadow-glow-gold);
+      width: 80px;
+      height: 80px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 12px 40px rgba(124,58,237,0.4);
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        border-radius: 26px;
+        padding: 2px;
+        background: linear-gradient(135deg, var(--primary), var(--accent));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0.5;
+      }
     }
-    .brand h1 { font-size: 26px; margin-bottom: 6px; }
+
+    .icon-text {
+      font-family: var(--font-display);
+      font-size: 40px;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .brand-title {
+      font-family: var(--font-display);
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-subtitle {
+      font-size: 15px;
+      color: var(--muted);
+      font-weight: 500;
+    }
 
     .auth-card {
       width: 100%;
       background: var(--surface);
-      border-radius: 24px;
-      padding: 28px 24px;
+      border-radius: 28px;
+      padding: 32px 28px;
       border: 1px solid var(--border);
-      margin-bottom: 20px;
+      box-shadow: var(--shadow-lg);
+      margin-bottom: 24px;
+      backdrop-filter: blur(20px);
     }
-    .form-title {
+
+    .card-header {
+      margin-bottom: 28px;
+    }
+
+    .card-title {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 24px;
       font-weight: 800;
-      margin-bottom: 4px;
-    }
-    .field-group { margin-bottom: 16px; }
-    .field-label {
-      display: block;
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
+      color: var(--text);
       margin-bottom: 8px;
     }
-    .input-wrap {
-      position: relative;
+
+    .card-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-label {
       display: flex;
       align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+      
+      ion-icon {
+        font-size: 16px;
+        color: var(--primary);
+      }
     }
-    .input-icon {
-      position: absolute;
-      left: 14px;
-      color: var(--muted);
-      font-size: 17px;
-      z-index: 1;
+
+    .input-wrap {
+      position: relative;
     }
-    .input-icon-end {
-      position: absolute;
-      right: 14px;
-      color: var(--muted);
-      font-size: 17px;
-      cursor: pointer;
-    }
-    .auth-input {
+
+    .modern-input {
       width: 100%;
       background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 13px 44px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
       color: var(--text);
       font-family: var(--font-body);
-      font-size: 14px;
+      font-size: 15px;
       outline: none;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      &:focus {
-        border-color: var(--accent);
-        box-shadow: 0 0 0 3px var(--accent-dim);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      &::placeholder {
+        color: var(--muted);
+        opacity: 0.6;
       }
-      &::placeholder { color: var(--muted); }
+      
+      &:focus {
+        border-color: var(--primary);
+        box-shadow: 0 0 0 4px var(--primary-dim);
+        background: var(--surface3);
+      }
     }
+
+    .toggle-pass {
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 8px;
+      transition: all 0.3s;
+      
+      ion-icon {
+        font-size: 20px;
+      }
+      
+      &:hover {
+        color: var(--primary);
+        background: var(--primary-dim);
+      }
+    }
+
     .forgot-wrap {
       display: flex;
       justify-content: flex-end;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
     }
+
     .forgot-link {
-      font-size: 12px;
-      color: var(--accent);
-      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--primary);
       font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      
+      ion-icon {
+        font-size: 16px;
+      }
+      
+      &:hover {
+        color: var(--primary-light);
+        transform: translateX(2px);
+      }
     }
-    .auth-btn {
+
+    .gradient-btn {
       width: 100%;
-      padding: 15px;
-      border-radius: var(--radius);
+      height: 56px;
+      padding: 0 28px;
+      border-radius: 14px;
       border: none;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      color: #ffffff;
       font-family: var(--font-display);
-      font-size: 15px;
+      font-size: 16px;
       font-weight: 700;
+      letter-spacing: 0.3px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: opacity 0.2s;
-      &.primary {
-        background: var(--accent);
-        color: #0b0f1a;
-        box-shadow: var(--shadow-glow-gold);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 8px 24px rgba(124,58,237,0.3);
+      position: relative;
+      overflow: hidden;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
+        opacity: 0;
+        transition: opacity 0.3s;
       }
-      &:disabled { opacity: 0.6; cursor: not-allowed; }
+      
+      &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(124,58,237,0.4);
+        
+        &::before {
+          opacity: 1;
+        }
+      }
+      
+      &:active:not(:disabled) {
+        transform: translateY(0);
+      }
+      
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
     }
-    .auth-footer { font-size: 13px; color: var(--muted); text-align: center; }
-    .auth-link { color: var(--accent); font-weight: 600; cursor: pointer; }
+
+    .btn-content {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: relative;
+      z-index: 1;
+      
+      ion-icon {
+        font-size: 20px;
+      }
+    }
+
+    ion-spinner {
+      --color: #ffffff;
+      width: 24px;
+      height: 24px;
+    }
+
+    .auth-footer {
+      text-align: center;
+    }
+
+    .footer-text {
+      font-size: 14px;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    .footer-link {
+      color: var(--primary);
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s;
+      display: inline-block;
+      
+      &:hover {
+        color: var(--primary-light);
+        transform: translateX(2px);
+      }
+    }
+
+    @media (max-height: 700px) {
+      .auth-wrap {
+        padding: 24px;
+      }
+      
+      .brand {
+        margin-bottom: 24px;
+      }
+      
+      .brand-icon {
+        width: 64px;
+        height: 64px;
+      }
+      
+      .icon-text {
+        font-size: 32px;
+      }
+    }
   `]
 })
 export class LoginPage {
@@ -209,7 +452,7 @@ export class LoginPage {
   showPass = false;
   loading = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   async login() {
     if (!this.email || !this.password) return;
