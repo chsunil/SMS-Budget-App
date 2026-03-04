@@ -903,5 +903,3 @@ export class MessagesPage implements OnInit {
     await t.present();
   }
 }
-
-import { format, isToday, isYesterday } from 'date-fns';
