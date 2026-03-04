@@ -18,7 +18,12 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 // Google Fonts
+<<<<<<< HEAD
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
+
+=======
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+>>>>>>> 617d39836f81de7351aa255952f73a86b7c6ca21
 // ── Design Tokens ──────────────────────────────
 :root {
   // Light mode base (new purple theme)
@@ -69,9 +74,15 @@
   --radius-lg: 20px;
   --radius-xl: 28px;
 
+<<<<<<< HEAD
+  // Fonts
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+=======
   // Fonts
   --font-display: 'Inter', sans-serif;
   --font-body: 'Inter', sans-serif;
+>>>>>>> 617d39836f81de7351aa255952f73a86b7c6ca21
 
   // Shadows
   --shadow-card: 0 1px 8px rgba(0,0,0,0.06);
