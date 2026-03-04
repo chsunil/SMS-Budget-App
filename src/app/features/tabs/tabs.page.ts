@@ -21,9 +21,9 @@ import { RouterModule } from '@angular/router';
           <ion-label>Txns</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="sms" href="/tabs/sms">
-          <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-          <ion-label>SMS</ion-label>
+        <ion-tab-button tab="messages" href="/tabs/messages">
+          <ion-icon name="chatbubbles-outline"></ion-icon>
+          <ion-label>Messages</ion-label>
         </ion-tab-button>
 
         <ion-tab-button tab="reports" href="/tabs/reports">

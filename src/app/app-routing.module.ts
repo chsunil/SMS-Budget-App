@@ -39,12 +39,12 @@ const routes: Routes = [
       import('./features/transactions/add-transaction/add-transaction.module')
         .then(m => m.AddTransactionPageModule)
   },
-  {
+  /* {
     path: 'sms-import',
     // canActivate: [authGuard],
     loadChildren: () =>
       import('./features/sms-import/sms-import.module').then(m => m.SmsImportPageModule)
-  },
+  }, */
   {
     path: '**',
     redirectTo: 'tabs/dashboard'

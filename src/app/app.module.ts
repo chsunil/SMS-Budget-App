@@ -11,7 +11,8 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
-
+import { addIcons } from 'ionicons';
+import * as allIcons from 'ionicons/icons';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -36,4 +37,8 @@ import { environment } from '../environments/environment';
   ],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule {
+   constructor() {
+    addIcons(allIcons); // registers every icon globally
+  }
+}

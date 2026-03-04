@@ -1,7 +1,7 @@
 /*
  * ─────────────────────────────────────────────────
- *  global.scss — SMS Budget Planner (UPDATED)
- *  Modern purple gradient theme with polished UI
+ *  global.scss — SMS Budget Planner
+ *  Violet/Purple Premium Design System
  * ─────────────────────────────────────────────────
  */
 
@@ -18,81 +18,71 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 // Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,300&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 // ── Design Tokens ──────────────────────────────
 :root {
-  // Backgrounds with gradient support
-  --bg: #0f0f1e;
-  --bg-gradient: linear-gradient(180deg, #1a1a2e 0%, #0f0f1e 100%);
-  --surface: #1a1a2e;
-  --surface2: #252542;
-  --surface3: #2d2d4a;
-  --surface-gradient: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  // Light mode base (new purple theme)
+  --bg: #f3f4f6;
+  --surface: #ffffff;
+  --surface2: #f9fafb;
+  --surface3: #f3f4f6;
+  --border: rgba(0,0,0,0.06);
+  --border-hover: rgba(0,0,0,0.12);
+  --text: #111827;
+  --text-secondary: #374151;
+  --muted: #6b7280;
+  --muted2: #9ca3af;
 
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.15);
-  --text: #f5f5f7;
-  --muted: #9ca3af;
-  --muted2: #6b7280;
+  // Violet/Purple primary palette
+  --v-purple: #7c3aed;
+  --v-purple-dark: #6d28d9;
+  --v-purple-darker: #5b21b6;
+  --v-purple-light: #8b5cf6;
+  --v-purple-dim: rgba(124,58,237,0.1);
+  --v-purple-dim2: rgba(124,58,237,0.06);
 
-  // Primary purple theme
-  --primary: #7c3aed;
-  --primary-light: #8b5cf6;
-  --primary-dark: #6d28d9;
-  --primary-dim: rgba(124, 58, 237, 0.15);
-  --primary-glow: rgba(124, 58, 237, 0.3);
-
-  // Accent pink
-  --accent: #ec4899;
-  --accent-dim: rgba(236, 72, 153, 0.15);
-  --accent2: #db2777;
-
-  // Status colors
+  // Semantic colors
   --green: #10b981;
-  --green-dim: rgba(16, 185, 129, 0.12);
-  --green-light: #34d399;
+  --green-dim: rgba(16,185,129,0.12);
   --red: #ef4444;
-  --red-dim: rgba(239, 68, 68, 0.12);
-  --red-light: #f87171;
+  --red-dim: rgba(239,68,68,0.12);
   --blue: #3b82f6;
-  --blue-dim: rgba(59, 130, 246, 0.12);
-  --blue-light: #60a5fa;
-
-  // Category colors
-  --purple: #a78bfa;
-  --purple-dim: rgba(167, 139, 250, 0.12);
-  --orange: #f59e0b;
-  --orange-dim: rgba(245, 158, 11, 0.12);
-  --orange-light: #fbbf24;
+  --blue-dim: rgba(59,130,246,0.12);
+  --yellow: #f59e0b;
+  --yellow-dim: rgba(245,158,11,0.12);
   --pink: #ec4899;
-  --pink-dim: rgba(236, 72, 153, 0.12);
-  --teal: #14b8a6;
-  --cyan: #06b6d4;
+  --pink-dim: rgba(236,72,153,0.12);
+  --orange: #f97316;
+  --orange-dim: rgba(249,115,22,0.12);
 
-  // Border radius
-  --radius-sm: 12px;
-  --radius: 18px;
-  --radius-lg: 24px;
-  --radius-xl: 32px;
+  // Legacy dark mode tokens (keep for compatibility)
+  --accent: #7c3aed;
+  --accent-dim: rgba(124,58,237,0.12);
+  --accent2: #6d28d9;
+  --teal: #2dd4bf;
+  --purple: #a78bfa;
+  --purple-dim: rgba(167,139,250,0.12);
 
-  // Typography
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
+  // Radii
+  --radius-sm: 10px;
+  --radius: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
 
-  // Shadows & glows
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
-  --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 12px 48px rgba(0, 0, 0, 0.4);
-  --shadow-glow-primary: 0 0 32px rgba(124, 58, 237, 0.25);
-  --shadow-glow-green: 0 0 24px rgba(16, 185, 129, 0.2);
-  --shadow-glow-pink: 0 0 24px rgba(236, 72, 153, 0.2);
+  // Fonts
+  --font-display: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+
+  // Shadows
+  --shadow-card: 0 1px 8px rgba(0,0,0,0.06);
+  --shadow-card-hover: 0 4px 24px rgba(0,0,0,0.12);
+  --shadow-purple: 0 8px 24px rgba(124,58,237,0.25);
+  --shadow-glow-gold: 0 0 24px rgba(245,200,66,0.15);
+  --shadow-glow-green: 0 0 24px rgba(62,207,142,0.15);
 }
 
 // ── Base ────────────────────────────────────────
-* {
-  -webkit-tap-highlight-color: transparent;
-}
+* { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
 body {
   font-family: var(--font-body);
@@ -101,166 +91,111 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-ion-app {
-  background: var(--bg);
-}
-
-ion-content {
-  --background: var(--bg);
-  --color: var(--text);
-}
-
-ion-header {
-  &::after {
-    display: none;
-  }
-}
-
+ion-app { background: var(--bg); }
+ion-content { --background: var(--bg); --color: var(--text); }
+ion-header { &::after { display: none; } }
 ion-toolbar {
-  --background: transparent;
+  --background: var(--surface);
   --color: var(--text);
   --border-color: transparent;
-  padding-top: 8px;
+  box-shadow: 0 1px 0 var(--border);
 }
 
-// ── Tab Bar (Modern Style) ─────────────────────
+// ── Tab Bar (Purple Styled) ────────────────────
 ion-tab-bar {
-  --background: var(--surface);
-  --border: 1px solid var(--border);
-  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-  height: 72px;
-  padding: 8px 12px;
-  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.2);
+  --background: white;
+  --border: none;
+  border-top: 1px solid var(--border);
+  height: 64px;
+  padding: 6px 12px;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.06);
 }
 
 ion-tab-button {
-  --color: var(--muted);
-  --color-selected: var(--primary);
-  --ripple-color: var(--primary-dim);
-  border-radius: var(--radius);
-  margin: 0 2px;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --color: var(--muted2);
+  --color-selected: var(--v-purple);
+  --ripple-color: var(--v-purple-dim);
 
   ion-label {
     font-family: var(--font-body);
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    letter-spacing: 0.3px;
-    margin-top: 4px;
-    transition: all 0.3s;
+    margin-top: 2px;
   }
-
-  ion-icon {
-    font-size: 24px;
-    transition: all 0.3s;
-  }
+  ion-icon { font-size: 20px; }
 
   &.tab-selected {
-    background: var(--primary-dim);
-
-    ion-icon {
-      color: var(--primary);
-      transform: translateY(-2px);
-    }
-
-    ion-label {
-      color: var(--primary);
-      font-weight: 700;
-    }
+    ion-icon { color: var(--v-purple); }
+    ion-label { color: var(--v-purple); }
   }
 }
 
-// ── Cards (Enhanced) ───────────────────────────
+// ── Cards ────────────────────────────────────
 ion-card {
   --background: var(--surface);
   --color: var(--text);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   border: 1px solid var(--border);
-  margin: 0 0 16px 0;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-lg);
-    border-color: var(--border-hover);
-  }
+  margin: 0 0 12px 0;
 }
 
-// ── Form Elements (Polished) ───────────────────
 ion-item {
   --background: transparent;
   --color: var(--text);
   --border-color: var(--border);
-  --highlight-color-focused: var(--primary);
+  --highlight-color-focused: var(--v-purple);
   --padding-start: 0;
   --inner-padding-end: 0;
 }
 
-ion-input,
-ion-textarea {
+// ── Inputs ────────────────────────────────────
+ion-input, ion-textarea {
   --background: var(--surface2);
   --color: var(--text);
-  --placeholder-color: var(--muted);
-  --placeholder-opacity: 0.6;
+  --placeholder-color: var(--muted2);
   --border-radius: var(--radius);
-  --padding-start: 18px;
-  --padding-end: 18px;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
-  border: 2px solid var(--border);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 14px;
+  --padding-bottom: 14px;
+  border: 1.5px solid var(--border);
   border-radius: var(--radius);
   font-family: var(--font-body);
-  font-size: 15px;
-  transition: all 0.3s;
 
   &.has-focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px var(--primary-dim);
-    --background: var(--surface3);
+    border-color: var(--v-purple);
+    box-shadow: 0 0 0 3px var(--v-purple-dim);
   }
 }
 
-// ── Buttons (Modern Gradient Style) ────────────
+// ── Buttons ────────────────────────────────────
 ion-button {
   --border-radius: var(--radius);
   font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.5px;
   text-transform: none;
-  height: 52px;
-  font-size: 15px;
 
   &.primary-btn {
-    --background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-    --background-activated: var(--primary-dark);
-    --background-hover: var(--primary-light);
-    --color: #ffffff;
-    --box-shadow: var(--shadow-glow-primary);
-    transition: all 0.3s;
-
-    &:hover {
-      transform: translateY(-2px);
-      --box-shadow: 0 0 40px rgba(124, 58, 237, 0.4);
-    }
-  }
-
-  &.accent-btn {
-    --background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
-    --color: #ffffff;
-    --box-shadow: var(--shadow-glow-pink);
+    --background: var(--v-purple);
+    --color: white;
+    --box-shadow: var(--shadow-purple);
+    &:hover { --background: var(--v-purple-dark); }
   }
 
   &.ghost-btn {
-    --background: transparent;
+    --background: var(--surface2);
     --color: var(--text);
-    border: 2px solid var(--border);
-
-    &:hover {
-      border-color: var(--primary);
-      --color: var(--primary);
-    }
+    border: 1.5px solid var(--border);
   }
+}
+
+// ── FAB (Purple) ──────────────────────────────
+ion-fab-button {
+  --background: var(--v-purple);
+  --color: white;
+  --box-shadow: var(--shadow-purple);
 }
 
 // ── Typography ─────────────────────────────────
@@ -273,275 +208,124 @@ ion-button {
 
 .section-title {
   font-family: var(--font-display);
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
   color: var(--muted);
   text-transform: uppercase;
-  letter-spacing: 1.8px;
-  margin: 0 0 14px 0;
+  letter-spacing: 1.5px;
+  margin: 0 0 12px 0;
 }
 
-.amount-text {
-  font-family: var(--font-display);
-  font-weight: 700;
-}
+.amount-text { font-family: var(--font-display); font-weight: 700; }
+.muted { color: var(--muted); }
+.accent { color: var(--v-purple); }
+.green { color: var(--green); }
+.red { color: var(--red); }
+.blue { color: var(--blue); }
+.purple { color: var(--v-purple); }
+.orange { color: var(--orange); }
+.pink { color: var(--pink); }
 
-.gradient-text {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-// Colors
-.muted {
-  color: var(--muted);
-}
-
-.primary {
-  color: var(--primary);
-}
-
-.accent {
-  color: var(--accent);
-}
-
-.green {
-  color: var(--green);
-}
-
-.red {
-  color: var(--red);
-}
-
-.blue {
-  color: var(--blue);
-}
-
-.purple {
-  color: var(--purple);
-}
-
-.orange {
-  color: var(--orange);
-}
-
-.pink {
-  color: var(--pink);
-}
-
-// ── Badges (Pill Style) ────────────────────────
+// ── Badges ─────────────────────────────────────
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 5px 12px;
+  padding: 3px 10px;
   border-radius: 20px;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.8px;
   text-transform: uppercase;
 
-  &.badge-primary {
-    background: var(--primary-dim);
-    color: var(--primary);
-  }
-
-  &.badge-green {
-    background: var(--green-dim);
-    color: var(--green);
-  }
-
-  &.badge-red {
-    background: var(--red-dim);
-    color: var(--red);
-  }
-
-  &.badge-blue {
-    background: var(--blue-dim);
-    color: var(--blue);
-  }
-
-  &.badge-purple {
-    background: var(--purple-dim);
-    color: var(--purple);
-  }
-
-  &.badge-orange {
-    background: var(--orange-dim);
-    color: var(--orange);
-  }
-
-  &.badge-pink {
-    background: var(--pink-dim);
-    color: var(--pink);
-  }
+  &.badge-purple { background: var(--v-purple-dim); color: var(--v-purple); }
+  &.badge-gold { background: rgba(245,200,66,0.15); color: #d97706; }
+  &.badge-green { background: var(--green-dim); color: var(--green); }
+  &.badge-red { background: var(--red-dim); color: var(--red); }
+  &.badge-blue { background: var(--blue-dim); color: var(--blue); }
+  &.badge-orange { background: var(--orange-dim); color: var(--orange); }
 }
 
-// ── Progress Bar (Smooth Animation) ────────────
-.progress-track {
-  height: 6px;
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  overflow: hidden;
-  position: relative;
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 12px;
-    transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
-    position: relative;
-    overflow: hidden;
-
-    &::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(90deg,
-          transparent 0%,
-          rgba(255, 255, 255, 0.2) 50%,
-          transparent 100%);
-      animation: shimmer 2s infinite;
-    }
-  }
-}
-
-// ── Scrollbar (Sleek) ──────────────────────────
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--muted2);
-  border-radius: 6px;
-
-  &:hover {
-    background: var(--muted);
-  }
-}
+// ── Scrollbar ─────────────────────────────────
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
 
 // ── Animations ────────────────────────────────
 @keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
-
 @keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
-
 @keyframes pulse {
-
-  0%,
-  100% {
-    opacity: 1;
-  }
-
-  50% {
-    opacity: 0.6;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
 }
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
+.animate-fade-up { animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both; }
 
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.animate-fade-up {
-  animation: fadeUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animate-slide-in {
-  animation: slideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-// ── Skeleton Loader (Gradient) ─────────────────
+// ── Skeleton Loader ────────────────────────────
 .skeleton {
-  background: linear-gradient(90deg,
-      var(--surface2) 25%,
-      var(--surface3) 50%,
-      var(--surface2) 75%);
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
   background-size: 200% 100%;
-  animation: shimmer 1.8s infinite;
+  animation: shimmer 1.5s infinite;
   border-radius: var(--radius-sm);
 }
 
-// ── Floating Action Button ────────────────────
-ion-fab-button {
-  --background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-  --color: #ffffff;
-  --box-shadow: var(--shadow-glow-primary);
-  width: 64px;
-  height: 64px;
+// ── Progress Bar ───────────────────────────────
+.progress-track {
+  height: 5px;
+  background: var(--border);
+  border-radius: 10px;
+  overflow: hidden;
 
-  &:hover {
-    transform: scale(1.1);
-  }
-
-  ion-icon {
-    font-size: 28px;
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
   }
 }
 
-// ── Toast (Polished) ───────────────────────────
+// ── Alert Overrides (Purple) ───────────────────
+.v-alert {
+  --background: white;
+  --color: var(--text);
+
+  .alert-head { padding: 20px 20px 8px; }
+  .alert-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; }
+  .alert-sub-title, .alert-message { color: var(--muted); font-size: 13px; }
+  .alert-button-group { padding: 8px 12px 16px; gap: 8px; flex-direction: row; }
+  .alert-button {
+    border-radius: 12px !important;
+    font-family: var(--font-display) !important;
+    font-weight: 700 !important;
+  }
+  .alert-button-role-cancel {
+    color: var(--muted) !important;
+    border: 1.5px solid var(--border) !important;
+  }
+  .alert-button-role-destructive {
+    background: #fee2e2 !important;
+    color: var(--red) !important;
+  }
+}
+
+// ── Toast Overrides ────────────────────────────
 ion-toast {
-  --background: var(--surface2);
+  --background: white;
   --color: var(--text);
   --border-radius: var(--radius);
+  --box-shadow: 0 8px 32px rgba(0,0,0,0.12);
   font-family: var(--font-body);
-  --box-shadow: var(--shadow-card);
-
-  &::part(message) {
-    font-weight: 500;
-  }
 }
 
-// ── Loading (Smooth) ───────────────────────────
-ion-loading {
-  --background: var(--surface);
-  --spinner-color: var(--primary);
-  backdrop-filter: blur(12px);
-}
-
-// ── Modal (Elevated) ───────────────────────────
-ion-modal {
-  --background: var(--bg);
-  --border-radius: var(--radius-xl);
-  --box-shadow: var(--shadow-lg);
+// ── Page Transition ───────────────────────────
+ion-router-outlet > .ion-page {
+  animation: fadeIn 0.25s ease;
 }

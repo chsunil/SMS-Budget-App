@@ -1,3 +1,4 @@
+// ─── src/app/features/tabs/tabs.module.ts ────────
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
@@ -19,9 +20,9 @@ const routes: Routes = [
             .then(m => m.TransactionListPageModule)
       },
       {
-        path: 'sms',
+        path: 'messages',
         loadChildren: () =>
-          import('../sms-import/sms-import.module').then(m => m.SmsImportPageModule)
+          import('../messages/messages.module').then(m => m.MessagesPageModule)
       },
       {
         path: 'reports',

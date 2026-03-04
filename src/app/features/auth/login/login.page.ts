@@ -1,4 +1,4 @@
-// ─── Updated Login Page with Modern Gradient UI ─
+// ─── src/app/features/auth/login/login.page.ts ──
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,438 +12,218 @@ import { AuthService } from '../../../core/services/auth.service';
   imports: [CommonModule, FormsModule, IonicModule, RouterModule],
   template: `
     <ion-content [fullscreen]="true">
-      <div class="auth-background">
-        <div class="gradient-blob blob-1"></div>
-        <div class="gradient-blob blob-2"></div>
-      </div>
+      <div class="login-bg">
+        <!-- Decorative circles -->
+        <div class="circle circle-1"></div>
+        <div class="circle circle-2"></div>
+        <div class="circle circle-3"></div>
 
-      <div class="auth-wrap">
-        <!-- Logo & Brand -->
-        <div class="brand animate-fade-up">
-          <div class="brand-icon">
-            <span class="icon-text">₹</span>
-          </div>
-          <h1 class="brand-title gradient-text">SMS Budget</h1>
-          <p class="brand-subtitle">Smart money tracking, automated</p>
-        </div>
-
-        <!-- Login Form -->
-        <div class="auth-card animate-fade-up" style="animation-delay: 0.1s">
-          <div class="card-header">
-            <h2 class="card-title">Welcome back!</h2>
-            <p class="card-subtitle">Sign in to continue managing your budget</p>
-          </div>
-
-          <div class="field-group">
-            <label class="field-label">
-              <ion-icon name="mail-outline"></ion-icon>
-              Email Address
-            </label>
-            <div class="input-wrap">
-              <input
-                type="email"
-                [(ngModel)]="email"
-                placeholder="you@example.com"
-                class="modern-input"
-                autocomplete="email"
-                (keyup.enter)="login()"
-              />
+        <div class="login-wrap">
+          <!-- Brand -->
+          <div class="brand">
+            <div class="brand-logo">
+              <span class="logo-rupee">₹</span>
             </div>
+            <h1 class="brand-name">SMS Budget</h1>
+            <p class="brand-sub">Hello, Welcome back! 👋</p>
+            <p class="brand-desc">Sign in to track your daily bills & expenses</p>
           </div>
 
-          <div class="field-group">
-            <label class="field-label">
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              Password
-            </label>
-            <div class="input-wrap">
-              <input
-                [type]="showPass ? 'text' : 'password'"
-                [(ngModel)]="password"
-                placeholder="Enter your password"
-                class="modern-input"
-                autocomplete="current-password"
-                (keyup.enter)="login()"
-              />
-              <button class="toggle-pass" (click)="showPass = !showPass" type="button">
-                <ion-icon [name]="showPass ? 'eye-off-outline' : 'eye-outline'"></ion-icon>
+          <!-- Form Card -->
+          <div class="form-card">
+            <div class="field-group">
+              <label class="field-label">Email address</label>
+              <div class="input-wrap">
+                <ion-icon name="mail-outline" class="input-icon"></ion-icon>
+                <input type="email" [(ngModel)]="email"
+                  placeholder="you@example.com" class="v-input"
+                  autocomplete="email"/>
+              </div>
+            </div>
+
+            <div class="field-group">
+              <label class="field-label">Password</label>
+              <div class="input-wrap">
+                <ion-icon name="lock-closed-outline" class="input-icon"></ion-icon>
+                <input [type]="showPass ? 'text' : 'password'" [(ngModel)]="password"
+                  placeholder="••••••••" class="v-input"
+                  autocomplete="current-password"/>
+                <ion-icon [name]="showPass ? 'eye-off-outline' : 'eye-outline'"
+                  class="input-icon-end" (click)="showPass = !showPass">
+                </ion-icon>
+              </div>
+            </div>
+
+            <div class="forgot-row">
+              <span class="forgot-link" (click)="forgotPassword()">Forgot password?</span>
+            </div>
+
+            <button class="sign-btn" (click)="login()" [disabled]="loading">
+              <span *ngIf="!loading">SIGN IN</span>
+              <ion-spinner *ngIf="loading" name="crescent" style="width:20px;height:20px;--color:#6c3fff"></ion-spinner>
+            </button>
+
+            <div class="divider">
+              <span class="divider-line"></span>
+              <span class="divider-text">or continue with</span>
+              <span class="divider-line"></span>
+            </div>
+
+            <div class="social-row">
+              <button class="social-btn">
+                <ion-icon name="logo-google"></ion-icon>
+              </button>
+              <button class="social-btn">
+                <ion-icon name="logo-apple"></ion-icon>
+              </button>
+              <button class="social-btn">
+                <ion-icon name="logo-facebook"></ion-icon>
               </button>
             </div>
           </div>
 
-          <div class="forgot-wrap">
-            <span class="forgot-link" (click)="forgotPassword()">
-              <ion-icon name="key-outline"></ion-icon>
-              Forgot password?
-            </span>
-          </div>
-
-          <button class="gradient-btn" (click)="login()" [disabled]="loading || !email || !password">
-            <span *ngIf="!loading" class="btn-content">
-              <ion-icon name="log-in-outline"></ion-icon>
-              Sign In
-            </span>
-            <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
-          </button>
-        </div>
-
-        <!-- Register Link -->
-        <div class="auth-footer animate-fade-up" style="animation-delay: 0.2s">
-          <p class="footer-text">
+          <div class="register-row">
             Don't have an account?
-            <span class="footer-link" routerLink="/auth/register">Create one free</span>
-          </p>
+            <span class="register-link" routerLink="/auth/register"> Sign up</span>
+          </div>
         </div>
       </div>
     </ion-content>
   `,
   styles: [`
-    ion-content {
-      --background: var(--bg);
-    }
+    ion-content { --background: transparent; }
 
-    .auth-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
+    .login-bg {
+      min-height: 100vh;
+      background: linear-gradient(160deg, #7c3aed 0%, #6d28d9 35%, #5b21b6 65%, #4c1d95 100%);
+      position: relative;
       overflow: hidden;
-      z-index: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .gradient-blob {
+    /* Decorative circles */
+    .circle {
       position: absolute;
       border-radius: 50%;
-      filter: blur(80px);
-      opacity: 0.3;
-      animation: float 20s infinite;
+      opacity: 0.12;
+      background: white;
     }
+    .circle-1 { width: 280px; height: 280px; top: -80px; right: -60px; }
+    .circle-2 { width: 180px; height: 180px; top: 60px; right: 80px; opacity: 0.06; }
+    .circle-3 { width: 220px; height: 220px; bottom: -60px; left: -80px; opacity: 0.08; }
 
-    .blob-1 {
-      width: 400px;
-      height: 400px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      top: -200px;
-      right: -100px;
-    }
-
-    .blob-2 {
-      width: 300px;
-      height: 300px;
-      background: linear-gradient(135deg, var(--accent), var(--primary));
-      bottom: -150px;
-      left: -100px;
-      animation-delay: -10s;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      33% { transform: translate(30px, -30px) scale(1.1); }
-      66% { transform: translate(-20px, 20px) scale(0.9); }
-    }
-
-    .auth-wrap {
-      min-height: 100vh;
+    .login-wrap {
+      width: 100%;
+      max-width: 420px;
+      padding: 52px 24px 32px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 24px;
-      max-width: 440px;
-      margin: 0 auto;
       position: relative;
-      z-index: 1;
+      z-index: 2;
     }
 
-    .brand {
-      text-align: center;
-      margin-bottom: 40px;
+    /* Brand */
+    .brand { text-align: center; margin-bottom: 36px; }
+    .brand-logo {
+      width: 70px; height: 70px;
+      border-radius: 22px;
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(12px);
+      border: 1.5px solid rgba(255,255,255,0.3);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
     }
-
-    .brand-icon {
-      width: 80px;
-      height: 80px;
-      border-radius: 24px;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
-      box-shadow: 0 12px 40px rgba(124,58,237,0.4);
-      position: relative;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        inset: -2px;
-        border-radius: 26px;
-        padding: 2px;
-        background: linear-gradient(135deg, var(--primary), var(--accent));
-        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        mask-composite: exclude;
-        opacity: 0.5;
-      }
+    .logo-rupee { font-size: 32px; color: white; font-weight: 900; }
+    .brand-name {
+      font-family: 'Syne', sans-serif;
+      font-size: 28px; font-weight: 800;
+      color: white; margin-bottom: 12px;
     }
-
-    .icon-text {
-      font-family: var(--font-display);
-      font-size: 40px;
-      font-weight: 800;
-      color: #ffffff;
+    .brand-sub {
+      font-size: 20px; font-weight: 700;
+      color: white; margin-bottom: 6px;
     }
+    .brand-desc { font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; }
 
-    .brand-title {
-      font-family: var(--font-display);
-      font-size: 32px;
-      font-weight: 800;
-      margin-bottom: 8px;
-      letter-spacing: -0.5px;
-    }
-
-    .brand-subtitle {
-      font-size: 15px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .auth-card {
+    /* Form Card */
+    .form-card {
       width: 100%;
-      background: var(--surface);
+      background: white;
       border-radius: 28px;
-      padding: 32px 28px;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-lg);
-      margin-bottom: 24px;
-      backdrop-filter: blur(20px);
-    }
-
-    .card-header {
-      margin-bottom: 28px;
-    }
-
-    .card-title {
-      font-family: var(--font-display);
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .card-subtitle {
-      font-size: 14px;
-      color: var(--muted);
-      font-weight: 500;
-    }
-
-    .field-group {
+      padding: 28px 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.25);
       margin-bottom: 20px;
     }
 
+    .field-group { margin-bottom: 18px; }
     .field-label {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 10px;
-      
-      ion-icon {
-        font-size: 16px;
-        color: var(--primary);
-      }
-    }
-
-    .input-wrap {
-      position: relative;
-    }
-
-    .modern-input {
-      width: 100%;
-      background: var(--surface2);
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 16px 18px;
-      color: var(--text);
-      font-family: var(--font-body);
-      font-size: 15px;
-      outline: none;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      
-      &::placeholder {
-        color: var(--muted);
-        opacity: 0.6;
-      }
-      
-      &:focus {
-        border-color: var(--primary);
-        box-shadow: 0 0 0 4px var(--primary-dim);
-        background: var(--surface3);
-      }
-    }
-
-    .toggle-pass {
-      position: absolute;
-      right: 16px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      cursor: pointer;
-      padding: 8px;
-      border-radius: 8px;
-      transition: all 0.3s;
-      
-      ion-icon {
-        font-size: 20px;
-      }
-      
-      &:hover {
-        color: var(--primary);
-        background: var(--primary-dim);
-      }
-    }
-
-    .forgot-wrap {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 24px;
-    }
-
-    .forgot-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 13px;
-      color: var(--primary);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-      
-      ion-icon {
-        font-size: 16px;
-      }
-      
-      &:hover {
-        color: var(--primary-light);
-        transform: translateX(2px);
-      }
-    }
-
-    .gradient-btn {
-      width: 100%;
-      height: 56px;
-      padding: 0 28px;
-      border-radius: 14px;
-      border: none;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-      color: #ffffff;
-      font-family: var(--font-display);
-      font-size: 16px;
-      font-weight: 700;
+      display: block;
+      font-size: 12px; font-weight: 600;
+      color: #6b7280;
+      margin-bottom: 8px;
       letter-spacing: 0.3px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 8px 24px rgba(124,58,237,0.3);
-      position: relative;
-      overflow: hidden;
-      
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent) 100%);
-        opacity: 0;
-        transition: opacity 0.3s;
-      }
-      
-      &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 12px 32px rgba(124,58,237,0.4);
-        
-        &::before {
-          opacity: 1;
-        }
-      }
-      
-      &:active:not(:disabled) {
-        transform: translateY(0);
-      }
-      
-      &:disabled {
-        opacity: 0.6;
-        cursor: not-allowed;
-      }
     }
-
-    .btn-content {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      position: relative;
-      z-index: 1;
-      
-      ion-icon {
-        font-size: 20px;
-      }
-    }
-
-    ion-spinner {
-      --color: #ffffff;
-      width: 24px;
-      height: 24px;
-    }
-
-    .auth-footer {
-      text-align: center;
-    }
-
-    .footer-text {
+    .input-wrap { position: relative; display: flex; align-items: center; }
+    .input-icon { position: absolute; left: 14px; color: #9ca3af; font-size: 18px; }
+    .input-icon-end { position: absolute; right: 14px; color: #9ca3af; font-size: 18px; cursor: pointer; }
+    .v-input {
+      width: 100%;
+      background: #f9fafb;
+      border: 1.5px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 13px 44px;
+      color: #111827;
+      font-family: 'DM Sans', sans-serif;
       font-size: 14px;
-      color: var(--muted);
-      font-weight: 500;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      &:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,0.1); }
+      &::placeholder { color: #d1d5db; }
     }
 
-    .footer-link {
-      color: var(--primary);
-      font-weight: 700;
+    .forgot-row { display: flex; justify-content: flex-end; margin-bottom: 20px; }
+    .forgot-link { font-size: 12px; color: #7c3aed; font-weight: 600; cursor: pointer; }
+
+    .sign-btn {
+      width: 100%; padding: 15px;
+      border-radius: 14px; border: none;
+      background: linear-gradient(135deg, #7c3aed, #6d28d9);
+      color: white;
+      font-family: 'Syne', sans-serif;
+      font-size: 15px; font-weight: 700;
+      letter-spacing: 1px;
       cursor: pointer;
-      transition: all 0.3s;
-      display: inline-block;
-      
-      &:hover {
-        color: var(--primary-light);
-        transform: translateX(2px);
-      }
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 8px 24px rgba(109,40,217,0.4);
+      transition: opacity 0.2s, transform 0.1s;
+      &:active { transform: scale(0.98); }
+      &:disabled { opacity: 0.6; }
     }
 
-    @media (max-height: 700px) {
-      .auth-wrap {
-        padding: 24px;
-      }
-      
-      .brand {
-        margin-bottom: 24px;
-      }
-      
-      .brand-icon {
-        width: 64px;
-        height: 64px;
-      }
-      
-      .icon-text {
-        font-size: 32px;
-      }
+    .divider {
+      display: flex; align-items: center; gap: 12px;
+      margin: 20px 0;
     }
+    .divider-line { flex: 1; height: 1px; background: #e5e7eb; }
+    .divider-text { font-size: 12px; color: #9ca3af; white-space: nowrap; }
+
+    .social-row { display: flex; gap: 12px; }
+    .social-btn {
+      flex: 1; padding: 12px;
+      border-radius: 12px; border: 1.5px solid #e5e7eb;
+      background: white; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px; color: #374151;
+      transition: background 0.2s;
+      &:hover { background: #f9fafb; }
+    }
+
+    .register-row { font-size: 13px; color: rgba(255,255,255,0.8); text-align: center; }
+    .register-link { color: white; font-weight: 700; cursor: pointer; }
   `]
 })
 export class LoginPage {
@@ -452,7 +232,7 @@ export class LoginPage {
   showPass = false;
   loading = false;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService) {}
 
   async login() {
     if (!this.email || !this.password) return;
@@ -465,10 +245,7 @@ export class LoginPage {
   }
 
   async forgotPassword() {
-    if (!this.email) {
-      alert('Please enter your email address first.');
-      return;
-    }
+    if (!this.email) { alert('Please enter your email address first.'); return; }
     await this.authService.resetPassword(this.email);
   }
 }
