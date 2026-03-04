@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    canActivate: [guestGuard],
+    // canActivate: [guestGuard],
     children: [
       {
         path: 'login',

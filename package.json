@@ -13,7 +13,8 @@
     "android": "ionic capacitor build android",
     "android:run": "ionic capacitor run android -l --external",
     "android:open": "ionic capacitor open android",
-    "pwa:serve": "npx http-server ./dist/sms-budget-app -p 8080"
+    "pwa:serve": "npx http-server ./dist/sms-budget-app -p 8080",
+    "capacitor": "npm run build && npx cap sync android && npx cap open android"
   },
   "private": true,
   "dependencies": {

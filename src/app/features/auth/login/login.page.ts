@@ -62,6 +62,10 @@ import { AuthService } from '../../../core/services/auth.service';
               <span *ngIf="!loading">SIGN IN</span>
               <ion-spinner *ngIf="loading" name="crescent" style="width:20px;height:20px;--color:#6c3fff"></ion-spinner>
             </button>
+            <button class="sign-btn" href="/tabs/dashboard">
+              <span *ngIf="!loading">Guest Login</span>
+              <ion-spinner *ngIf="loading" name="crescent" style="width:20px;height:20px;--color:#6c3fff"></ion-spinner>
+            </button>
 
             <div class="divider">
               <span class="divider-line"></span>
@@ -232,7 +236,7 @@ export class LoginPage {
   showPass = false;
   loading = false;
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
 
   async login() {
     if (!this.email || !this.password) return;
@@ -243,7 +247,6 @@ export class LoginPage {
       this.loading = false;
     }
   }
-
   async forgotPassword() {
     if (!this.email) { alert('Please enter your email address first.'); return; }
     await this.authService.resetPassword(this.email);
