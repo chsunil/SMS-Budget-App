@@ -19,6 +19,7 @@ import { Auth, authState } from '@angular/fire/auth';
 import { Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { MerchantRulesService } from './merchant-rules.service';
 import {
   MonthlyBudget,
   Transaction,
@@ -33,6 +34,7 @@ export class BudgetService {
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
   private auth = inject(Auth);
+  private merchantRules = inject(MerchantRulesService);
 
   private _currentMonth$ = new BehaviorSubject<string>(this.currentMonthKey());
   readonly currentMonth$ = this._currentMonth$.asObservable();
@@ -198,10 +200,23 @@ export class BudgetService {
     const uid = await this.getUid();
     if (!uid) throw new Error('Not authenticated');
 
+    // ── Auto-categorize via merchant rules if still uncategorized ──
+    let finalTxn = { ...txn };
+    if (!finalTxn.category || finalTxn.category === 'uncategorized') {
+      const match = this.merchantRules.applyRules(
+        finalTxn.merchant ?? '',
+        finalTxn.smsRaw ?? ''
+      );
+      if (match) {
+        finalTxn.category = match.category;
+        finalTxn.subcategory = match.subcategory;
+      }
+    }
+
     const colRef = collection(this.firestore, `users/${uid}/transactions`);
     const newRef = doc(colRef);
     const transaction: Transaction = {
-      ...txn,
+      ...finalTxn,
       id: newRef.id,
       userId: uid,
       createdAt: new Date()
@@ -210,11 +225,11 @@ export class BudgetService {
     await setDoc(newRef, { ...transaction, createdAt: serverTimestamp() });
 
     // Update category + subcategory spent totals
-    if (txn.category !== 'uncategorized') {
-      if (txn.subcategory) {
-        await this.updateSubcategorySpent(txn.month, txn.category, txn.subcategory, txn.amount, txn.type === 'debit');
+    if (finalTxn.category !== 'uncategorized') {
+      if (finalTxn.subcategory) {
+        await this.updateSubcategorySpent(finalTxn.month, finalTxn.category, finalTxn.subcategory, finalTxn.amount, finalTxn.type === 'debit');
       } else {
-        await this.updateCategorySpent(txn.month, txn.category, txn.amount, txn.type === 'debit');
+        await this.updateCategorySpent(finalTxn.month, finalTxn.category, finalTxn.amount, finalTxn.type === 'debit');
       }
     }
 

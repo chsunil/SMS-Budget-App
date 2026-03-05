@@ -168,7 +168,7 @@ export const DEFAULT_BUDGET_CATEGORIES: Omit<CategoryBudget, 'limit' | 'spent'>[
 ];
 
 export const AVOID_LIST = [
-  { emoji: '🚬', name: 'Smoking',  key: 'smoke'   },
+  { emoji: '🚬', name: 'Smoking', key: 'smoke' },
   { emoji: '🍺', name: 'Drinking', key: 'alcohol' }
 ];
 
@@ -208,3 +208,21 @@ export const CATEGORY_MERCHANT_MAP: Record<CategoryKey, string[]> = {
   ],
   uncategorized: []
 };
+
+// ── Merchant Rule ────────────────────────────────
+// User-defined rules: if merchant/SMS contains `pattern`, assign category+subcategory
+export type MatchType = 'contains' | 'startsWith' | 'exact' | 'regex';
+
+export interface MerchantRule {
+  id?: string;
+  userId: string;
+  pattern: string;          // text to match (case-insensitive)
+  matchType: MatchType;     // how to match
+  category: CategoryKey;
+  subcategory?: string;
+  priority: number;         // higher = checked first (default 0)
+  enabled: boolean;
+  hitCount: number;         // how many times this rule matched
+  createdAt?: Date;
+  updatedAt?: Date;
+}

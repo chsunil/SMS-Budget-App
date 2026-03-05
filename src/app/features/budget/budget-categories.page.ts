@@ -85,6 +85,18 @@ interface EditingSubcat {
           </div>
         </div>
 
+        <!-- ── Empty state (auth/firestore issue) ── -->
+        <div class="empty-budget" *ngIf="!loading && !budget">
+          <div class="empty-icon">📊</div>
+          <h3>No budget found</h3>
+          <p>Your budget for {{ currentMonthLabel }} hasn't been set up yet.</p>
+          <button class="create-btn" (click)="createBudget()">
+            <ion-icon name="add-circle-outline"></ion-icon>
+            Create {{ currentMonthLabel }} Budget
+          </button>
+          <p class="empty-hint">If this keeps failing, check you are signed in and Firestore rules allow writes to users/uid/budgets</p>
+        </div>
+
         <!-- ── Category Cards ── -->
         <ng-container *ngIf="!loading && budget">
 
@@ -147,7 +159,7 @@ interface EditingSubcat {
                 </div>
               </div>
               <div class="cat-prog-label">
-                <span [style.color]="getCatSpentColor(cat)">{{ getCatPct(cat) }}% used</span>
+                <span [style.color]="getCatSpentColor(cat)">{{ getCatPct(cat) + "% used" }}</span>
                 <span class="muted-text">{{ getRemainingLabel(cat) }} left</span>
               </div>
             </div>
@@ -368,7 +380,8 @@ interface EditingSubcat {
       background: rgba(255,255,255,0.12); color: white; font-size: 18px;
       display: flex; align-items: center; justify-content: center; cursor: pointer;
       transition: background 0.2s;
-      &:active { background: rgba(255,255,255,0.2); }
+    }
+    .icon-btn:active { background: rgba(255,255,255,0.2); 
     }
 
     /* Summary pills */
@@ -395,13 +408,20 @@ interface EditingSubcat {
       background: white; color: #64748b; font-size: 16px;
       display: flex; align-items: center; justify-content: center;
       cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.08);
-      &:disabled { opacity: 0.3; cursor: not-allowed; }
+    }
+    .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; 
     }
     .month-label { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; color: #1e293b; }
 
     /* Skeleton */
     .skel-wrap { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
     .skel-card { background: white; border-radius: 20px; padding: 18px; }
+    .empty-budget { text-align: center; padding: 60px 28px 40px; }
+    .empty-icon { font-size: 56px; display: block; margin-bottom: 16px; }
+    .empty-budget h3 { font-family: 'Syne', sans-serif; font-size: 20px; font-weight: 800; color: #1f2937; margin-bottom: 8px; }
+    .empty-budget p { font-size: 13px; color: #6b7280; line-height: 1.6; margin-bottom: 20px; }
+    .create-btn { display: inline-flex; align-items: center; gap: 8px; background: #6366f1; color: white; border: none; border-radius: 14px; padding: 13px 24px; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 16px rgba(99,102,241,0.35); margin-bottom: 16px; }
+    .empty-hint { font-size: 11px; color: #9ca3af; line-height: 1.5; } .empty-hint code { background: #f3f4f6; padding: 1px 5px; border-radius: 4px; font-size: 10px; }
     .skeleton {
       background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
       background-size: 200% 100%; animation: shimmer 1.5s infinite;
@@ -426,8 +446,9 @@ interface EditingSubcat {
       overflow: hidden;
       border: 1.5px solid transparent;
       transition: border-color 0.2s;
-      &.expanded { border-color: #e2e8f0; }
-    }
+      }
+    .cat-card.expanded { border-color: #e2e8f0; }
+    
     .cat-header { display: flex; align-items: center; padding: 14px 14px 0; gap: 10px; cursor: pointer; }
     .cat-icon-wrap { width: 44px; height: 44px; border-radius: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
     .cat-icon { font-size: 22px; }
@@ -444,10 +465,12 @@ interface EditingSubcat {
       background: #f8fafc; color: #94a3b8; font-size: 14px;
       display: flex; align-items: center; justify-content: center; cursor: pointer;
       transition: all 0.15s;
-      &:active { transform: scale(0.9); }
-      &.danger { color: #ef4444; background: #fff5f5; }
     }
-    .chevron-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 14px; transition: transform 0.25s; &.rotated { transform: rotate(180deg); } }
+    .sub-action-btn:active { transform: scale(0.9); 
+    .sub-action-btn.danger { color: #ef4444; background: #fff5f5; }
+    }
+    .chevron-icon { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 14px; transition: transform 0.25s; }
+    .chevron-icon.rotated { transform: rotate(180deg); }
 
     /* Category progress */
     .cat-prog-wrap { padding: 10px 14px 12px; }
@@ -456,7 +479,8 @@ interface EditingSubcat {
     .cat-prog-label { display: flex; justify-content: space-between; font-size: 11px; font-weight: 600; }
 
     /* Subcategory list */
-    .subcat-list { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1); &.open { max-height: 800px; } }
+    .subcat-list { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(0.16,1,0.3,1); }
+    .subcat-list.open { max-height: 800px; }
     .subcat-divider { height: 1px; background: #f1f5f9; margin: 0 14px; }
     .subcat-row { display: flex; align-items: flex-start; padding: 10px 14px; gap: 10px; border-bottom: 1px solid #f8fafc; }
     .sub-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
@@ -469,7 +493,7 @@ interface EditingSubcat {
     .sub-spent { font-size: 13px; font-weight: 700; }
     .sub-limit { font-size: 11px; }
     .sub-actions { display: flex; gap: 4px; align-items: center; }
-    .sub-action-btn { width: 26px; height: 26px; border-radius: 8px; border: none; background: #f8fafc; color: #94a3b8; font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; &.danger{color:#ef4444;background:#fff5f5} }
+    .sub-action-btn { width: 26px; height: 26px; border-radius: 8px; border: none; background: #f8fafc; color: #94a3b8; font-size: 13px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .add-sub-btn { width: 100%; padding: 12px 14px; border: none; background: transparent; color: #7c3aed; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer; ion-icon{font-size:16px} }
 
     /* Avoid list */
@@ -484,7 +508,8 @@ interface EditingSubcat {
 
     /* Recent transactions */
     .txn-section { margin: 8px 16px; background: white; border-radius: 20px; padding: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
-    .txn-row { display: flex; align-items: center; padding: 9px 0; border-bottom: 1px solid #f8fafc; gap: 10px; &:last-child { border-bottom: none; } }
+    .txn-row { display: flex; align-items: center; padding: 9px 0; border-bottom: 1px solid #f8fafc; gap: 10px; }
+    .txn-row:last-child { border-bottom: none; }
     .txn-cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .txn-info { flex: 1; min-width: 0; }
     .txn-merchant { font-size: 13px; font-weight: 600; color: #1e293b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -496,7 +521,7 @@ interface EditingSubcat {
       position: fixed; inset: 0; background: rgba(0,0,0,0);
       z-index: 300; pointer-events: none;
       display: flex; align-items: flex-end; transition: background 0.3s;
-      &.open { background: rgba(0,0,0,0.5); pointer-events: all; }
+    .modal-overlay.open { background: rgba(0,0,0,0.5); pointer-events: all; }
     }
     .modal-sheet {
       width: 100%; max-width: 480px; margin: 0 auto;
@@ -514,19 +539,21 @@ interface EditingSubcat {
       width: 100%; background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px;
       padding: 13px 16px; font-size: 15px; color: #1e293b; outline: none; margin-bottom: 14px;
       font-family: 'DM Sans', sans-serif;
-      &:focus { border-color: #7c3aed; background: white; }
-      &::placeholder { color: #94a3b8; }
+    }
+    .modal-input:focus { border-color: #7c3aed; background: white; 
+    }
+    .modal-input::placeholder { color: #94a3b8; 
     }
     .modal-note { font-size: 12px; color: #94a3b8; line-height: 1.5; margin-bottom: 16px; }
     .modal-actions { display: flex; gap: 10px; margin-top: 4px; }
     .modal-btn {
       flex: 1; padding: 14px; border-radius: 14px; border: none;
       font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; cursor: pointer;
-      &.cancel { background: #f1f5f9; color: #64748b; }
-      &.save { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; box-shadow: 0 4px 16px rgba(109,40,217,0.3); }
+      .modal-btn.cancel { background: #f1f5f9; color: #64748b; }
+      .modal-btn.save { background: linear-gradient(135deg, #7c3aed, #6d28d9); color: white; box-shadow: 0 4px 16px rgba(109,40,217,0.3); }
     }
     .color-picker-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-    .color-chip { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: border-color 0.15s; &.selected { border-color: #1e293b; } }
+    .color-chip { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; transition: border-color 0.15s; .color-chip.selected { border-color: #1e293b; } }
   `]
 })
 export class BudgetCategoriesPage implements OnInit, OnDestroy {
@@ -553,9 +580,9 @@ export class BudgetCategoriesPage implements OnInit, OnDestroy {
   newAvoid = { emoji: '', name: '', key: '' };
 
   readonly colorOptions = [
-    '#f5c842','#fb923c','#ef4444','#ec4899','#a78bfa',
-    '#7c3aed','#3b82f6','#0ea5e9','#14b8a6','#10b981',
-    '#84cc16','#f97316','#6366f1','#8b5cf6','#d946ef'
+    '#f5c842', '#fb923c', '#ef4444', '#ec4899', '#a78bfa',
+    '#7c3aed', '#3b82f6', '#0ea5e9', '#14b8a6', '#10b981',
+    '#84cc16', '#f97316', '#6366f1', '#8b5cf6', '#d946ef'
   ];
 
   private sub?: Subscription;
@@ -565,7 +592,7 @@ export class BudgetCategoriesPage implements OnInit, OnDestroy {
     private budgetService: BudgetService,
     private toastCtrl: ToastController,
     private alertCtrl: AlertController
-  ) {}
+  ) { }
 
   get currentMonthLabel(): string {
     const [y, m] = this.currentMonth.split('-');
@@ -596,12 +623,24 @@ export class BudgetCategoriesPage implements OnInit, OnDestroy {
     this.sub?.unsubscribe();
     this.txnSub?.unsubscribe();
 
-    this.sub = this.budgetService.watchBudget(this.currentMonth).subscribe(async b => {
-      if (!b) {
-        await this.budgetService.getOrCreateBudget(this.currentMonth);
-      } else {
-        this.budget = b;
-        this.editIncome = b.income;
+    this.sub = this.budgetService.watchBudget(this.currentMonth).subscribe({
+      next: async b => {
+        if (!b) {
+          // No budget doc yet — create default one, watchBudget will re-emit with it
+          try {
+            await this.budgetService.getOrCreateBudget(this.currentMonth);
+          } catch (err) {
+            console.error('[Budget] getOrCreateBudget failed:', err);
+            this.loading = false; // stop spinner even on error
+          }
+        } else {
+          this.budget = b;
+          this.editIncome = b.income;
+          this.loading = false;
+        }
+      },
+      error: err => {
+        console.error('[Budget] watchBudget error:', err);
         this.loading = false;
       }
     });
@@ -609,6 +648,28 @@ export class BudgetCategoriesPage implements OnInit, OnDestroy {
     this.txnSub = this.budgetService.watchTransactions(this.currentMonth).subscribe(txns => {
       this.recentTxns = txns.slice(0, 15);
     });
+  }
+
+  async createBudget() {
+    this.loading = true;
+    try {
+      await this.budgetService.getOrCreateBudget(this.currentMonth);
+      // watchBudget subscription will pick up the new doc automatically
+    } catch (err: any) {
+      console.error('[Budget] create failed:', err);
+      this.loading = false;
+      const msg = err?.message?.includes('authenticated')
+        ? 'Please sign in first.'
+        : err?.message?.includes('permission')
+          ? 'Firestore permission denied. Update your security rules.'
+          : 'Failed to create budget. Check console for details.';
+      const alert = await this.alertCtrl.create({
+        header: 'Could not create budget',
+        message: msg,
+        buttons: ['OK']
+      });
+      await alert.present();
+    }
   }
 
   // ── Helpers ───────────────────────────────────
@@ -687,7 +748,7 @@ export class BudgetCategoriesPage implements OnInit, OnDestroy {
     const key = (this.newCat.name.toLowerCase().replace(/\s+/g, '_').substring(0, 20)) as CategoryKey;
     const limit = Math.round(this.budget.income * this.newCat.percentage / 100);
     const hex = this.newCat.color;
-    const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+    const r = parseInt(hex.slice(1, 3), 16), g = parseInt(hex.slice(3, 5), 16), b = parseInt(hex.slice(5, 7), 16);
 
     const newCat: CategoryBudget = {
       key,
@@ -715,7 +776,7 @@ export class BudgetCategoriesPage implements OnInit, OnDestroy {
 
   setEditCatColor(c: string) {
     if (!this.editingCat) return;
-    const r = parseInt(c.slice(1,3),16), g = parseInt(c.slice(3,5),16), b = parseInt(c.slice(5,7),16);
+    const r = parseInt(c.slice(1, 3), 16), g = parseInt(c.slice(3, 5), 16), b = parseInt(c.slice(5, 7), 16);
     this.editingCat = { ...this.editingCat, color: c, colorDim: `rgba(${r},${g},${b},0.12)` };
   }
 
@@ -821,7 +882,7 @@ export class BudgetCategoriesPage implements OnInit, OnDestroy {
     this.avoidList = [...this.avoidList, {
       emoji: this.newAvoid.emoji,
       name: this.newAvoid.name,
-      key: this.newAvoid.name.toLowerCase().replace(/\s+/g,'_')
+      key: this.newAvoid.name.toLowerCase().replace(/\s+/g, '_')
     }];
     this.newAvoid = { emoji: '', name: '', key: '' };
     this.showAddAvoid = false;
