@@ -1,4 +1,3 @@
-// ─── src/app/features/tabs/tabs.module.ts ────────
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
@@ -12,6 +11,11 @@ const routes: Routes = [
         path: 'dashboard',
         loadChildren: () =>
           import('../dashboard/dashboard.module').then(m => m.DashboardPageModule)
+      },
+      {
+        path: 'budget',
+        loadChildren: () =>
+          import('../budget/budget-categories.module').then(m => m.BudgetCategoriesPageModule)
       },
       {
         path: 'transactions',

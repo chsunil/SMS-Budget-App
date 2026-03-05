@@ -5,7 +5,6 @@ import {
   collection,
   doc,
   getDoc,
-  getDocs,
   setDoc,
   updateDoc,
   deleteDoc,
@@ -16,8 +15,7 @@ import {
   serverTimestamp,
   Timestamp
 } from '@angular/fire/firestore';
-import { Observable, from, BehaviorSubject, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { AuthService } from './auth.service';
 import {
   MonthlyBudget,
@@ -26,7 +24,7 @@ import {
   CategoryKey,
   DEFAULT_BUDGET_CATEGORIES
 } from '../models';
-import { format, startOfMonth, endOfMonth } from 'date-fns';
+import { format } from 'date-fns';
 
 @Injectable({ providedIn: 'root' })
 export class BudgetService {
@@ -57,14 +55,15 @@ export class BudgetService {
       return { id: snap.id, ...snap.data() } as MonthlyBudget;
     }
 
-    // Create default budget from template
+    // Create budget using exact subcategory limits from DEFAULT_BUDGET_CATEGORIES
     const categories: CategoryBudget[] = DEFAULT_BUDGET_CATEGORIES.map(cat => ({
       ...cat,
       limit: Math.round(income * cat.percentage / 100),
       spent: 0,
       subcategories: cat.subcategories.map(sub => ({
         ...sub,
-        limit: Math.round(income * cat.percentage / 100 / cat.subcategories.length),
+        // Use preset limit if > 0, otherwise calculate proportionally
+        limit: sub.limit > 0 ? sub.limit : Math.round(income * cat.percentage / 100 / cat.subcategories.length),
         spent: 0
       }))
     }));
@@ -104,6 +103,14 @@ export class BudgetService {
     });
   }
 
+  // Patch any fields on a budget document
+  async patchBudget(month: string, patch: Partial<MonthlyBudget>): Promise<void> {
+    const uid = this.authService.currentUser?.uid;
+    if (!uid) return;
+    const ref = doc(this.firestore, `users/${uid}/budgets/${month}`);
+    await updateDoc(ref, { ...patch, updatedAt: serverTimestamp() });
+  }
+
   async updateCategorySpent(month: string, categoryKey: CategoryKey, amount: number, isDebit: boolean) {
     const uid = this.authService.currentUser?.uid;
     if (!uid) return;
@@ -128,6 +135,35 @@ export class BudgetService {
     });
   }
 
+  // Update subcategory spent when transaction is added
+  async updateSubcategorySpent(
+    month: string,
+    categoryKey: CategoryKey,
+    subcategoryName: string,
+    amount: number,
+    isDebit: boolean
+  ): Promise<void> {
+    const uid = this.authService.currentUser?.uid;
+    if (!uid) return;
+
+    const budget = await this.getOrCreateBudget(month);
+    const updatedCategories = budget.categories.map(cat => {
+      if (cat.key !== categoryKey) return cat;
+      const updatedSubs = cat.subcategories.map(sub => {
+        if (sub.name === subcategoryName) {
+          return { ...sub, spent: isDebit ? sub.spent + amount : Math.max(0, sub.spent - amount) };
+        }
+        return sub;
+      });
+      const catSpent = updatedSubs.reduce((a, s) => a + s.spent, 0);
+      return { ...cat, subcategories: updatedSubs, spent: catSpent };
+    });
+
+    const totalSpent = updatedCategories.reduce((acc, c) => acc + c.spent, 0);
+    const ref = doc(this.firestore, `users/${uid}/budgets/${month}`);
+    await updateDoc(ref, { categories: updatedCategories, totalSpent, updatedAt: serverTimestamp() });
+  }
+
   // ── Transactions ──────────────────────────────
   async addTransaction(txn: Omit<Transaction, 'id' | 'userId' | 'createdAt'>): Promise<string> {
     const uid = this.authService.currentUser?.uid;
@@ -144,9 +180,13 @@ export class BudgetService {
 
     await setDoc(newRef, { ...transaction, createdAt: serverTimestamp() });
 
-    // Update category spent total
+    // Update category + subcategory spent totals
     if (txn.category !== 'uncategorized') {
-      await this.updateCategorySpent(txn.month, txn.category, txn.amount, txn.type === 'debit');
+      if (txn.subcategory) {
+        await this.updateSubcategorySpent(txn.month, txn.category, txn.subcategory, txn.amount, txn.type === 'debit');
+      } else {
+        await this.updateCategorySpent(txn.month, txn.category, txn.amount, txn.type === 'debit');
+      }
     }
 
     return newRef.id;
@@ -179,7 +219,13 @@ export class BudgetService {
     if (!uid) return;
 
     await deleteDoc(doc(this.firestore, `users/${uid}/transactions/${txnId}`));
-    await this.updateCategorySpent(txn.month, txn.category, txn.amount, txn.type !== 'debit');
+
+    // Reverse the spent amount
+    if (txn.subcategory) {
+      await this.updateSubcategorySpent(txn.month, txn.category, txn.subcategory, txn.amount, txn.type !== 'debit');
+    } else {
+      await this.updateCategorySpent(txn.month, txn.category, txn.amount, txn.type !== 'debit');
+    }
   }
 
   // ── Analytics ─────────────────────────────────
