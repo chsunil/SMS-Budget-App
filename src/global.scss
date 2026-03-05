@@ -1,11 +1,37 @@
 /*
- * ─────────────────────────────────────────────────
- *  global.scss — SMS Budget Planner
- *  Violet/Purple Premium Design System
- * ─────────────────────────────────────────────────
+ * ═══════════════════════════════════════════════════════════
+ *  global.scss  —  SMS Budget Planner
+ *  SINGLE SOURCE OF TRUTH for all app styles.
+ *
+ *  1.  Ionic core imports
+ *  2.  Design tokens
+ *  3.  Ionic overrides
+ *  4.  Typography utilities
+ *  5.  Page wrapper
+ *  6.  Page header (violet gradient)
+ *  7.  Cards
+ *  8.  Transaction rows
+ *  9.  Badges & chips
+ * 10.  Category colours
+ * 11.  Buttons
+ * 12.  Forms
+ * 13.  Bottom sheets
+ * 14.  Search bars
+ * 15.  Skeleton loaders
+ * 16.  Empty states
+ * 17.  Progress bars
+ * 18.  Summary pills
+ * 19.  Filter bar
+ * 20.  Settings rows
+ * 21.  Avoid chips
+ * 22.  Merchant rule cards
+ * 23.  Animations & keyframes
+ * 24.  Scrollbar
+ * 25.  Toast
+ * ═══════════════════════════════════════════════════════════
  */
 
-// Ionic core styles
+// ── 1. Ionic core ────────────────────────────────────────────
 @import "@ionic/angular/css/core.css";
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
@@ -18,71 +44,95 @@
 @import "@ionic/angular/css/flex-utils.css";
 
 // Google Fonts
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&display=swap');
 
-// ── Design Tokens ──────────────────────────────
+
+// ── 2. Design Tokens ─────────────────────────────────────────
 :root {
-  // Light mode base (new purple theme)
+  // Backgrounds
   --bg: #f3f4f6;
   --surface: #ffffff;
   --surface2: #f9fafb;
-  --surface3: #f3f4f6;
-  --border: rgba(0, 0, 0, 0.06);
-  --border-hover: rgba(0, 0, 0, 0.12);
+  --surface3: #f1f5f9;
+  --border: #e5e7eb;
+  --border2: #d1d5db;
+
+  // Text
   --text: #111827;
-  --text-secondary: #374151;
+  --text2: #374151;
   --muted: #6b7280;
   --muted2: #9ca3af;
 
-  // Violet/Purple primary palette
-  --v-purple: #7c3aed;
-  --v-purple-dark: #6d28d9;
-  --v-purple-darker: #5b21b6;
-  --v-purple-light: #8b5cf6;
-  --v-purple-dim: rgba(124, 58, 237, 0.1);
-  --v-purple-dim2: rgba(124, 58, 237, 0.06);
+  // Brand — Violet
+  --violet: #7c3aed;
+  --violet-dark: #6d28d9;
+  --violet-deep: #5b21b6;
+  --violet-dim: rgba(124, 58, 237, 0.10);
+  --violet-glass: rgba(255, 255, 255, 0.18);
 
-  // Semantic colors
+  // Semantic colours
   --green: #10b981;
   --green-dim: rgba(16, 185, 129, 0.12);
+  --green-bg: #d1fae5;
+  --green-text: #065f46;
+
   --red: #ef4444;
   --red-dim: rgba(239, 68, 68, 0.12);
-  --blue: #3b82f6;
-  --blue-dim: rgba(59, 130, 246, 0.12);
-  --yellow: #f59e0b;
-  --yellow-dim: rgba(245, 158, 11, 0.12);
-  --pink: #ec4899;
-  --pink-dim: rgba(236, 72, 153, 0.12);
-  --orange: #f97316;
-  --orange-dim: rgba(249, 115, 22, 0.12);
+  --red-bg: #fee2e2;
+  --red-text: #991b1b;
 
-  // Legacy dark mode tokens (keep for compatibility)
-  --accent: #7c3aed;
-  --accent-dim: rgba(124, 58, 237, 0.12);
-  --accent2: #6d28d9;
-  --teal: #2dd4bf;
-  --purple: #a78bfa;
-  --purple-dim: rgba(167, 139, 250, 0.12);
+  --gold: #f59e0b;
+  --gold-bg: #fef3c7;
+  --gold-text: #92400e;
+
+  --blue: #3b82f6;
+  --blue-bg: #dbeafe;
+  --blue-text: #1e40af;
+
+  --orange: #f97316;
+  --orange-bg: #ffedd5;
+
+  --pink: #ec4899;
+  --pink-bg: #fce7f3;
+
+  // Category palette
+  --cat-fixed: #f59e0b;
+  --cat-food: #3b82f6;
+  --cat-savings: #10b981;
+  --cat-self: #8b5cf6;
+  --cat-fun: #f97316;
+  --cat-giving: #ec4899;
+  --cat-uncat: #9ca3af;
 
   // Radii
-  --radius-sm: 10px;
-  --radius: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r: 14px;
+  --r-lg: 18px;
+  --r-xl: 22px;
+  --r-2xl: 28px;
 
   // Fonts
-  --font-display: 'Inter', sans-serif;
-  --font-body: 'Inter', sans-serif;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
 
   // Shadows
-  --shadow-card: 0 1px 8px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 4px 24px rgba(0, 0, 0, 0.12);
-  --shadow-purple: 0 8px 24px rgba(124, 58, 237, 0.25);
-  --shadow-glow-gold: 0 0 24px rgba(245, 200, 66, 0.15);
-  --shadow-glow-green: 0 0 24px rgba(62, 207, 142, 0.15);
+  --shadow-xs: 0 1px 4px rgba(0, 0, 0, 0.06);
+  --shadow-sm: 0 1px 8px rgba(0, 0, 0, 0.07);
+  --shadow: 0 2px 16px rgba(0, 0, 0, 0.09);
+  --shadow-violet: 0 8px 24px rgba(109, 40, 217, 0.28);
+
+  // Header gradient (used on every page)
+  --header-grad: linear-gradient(160deg, #7c3aed 0%, #5b21b6 100%);
+
+  // Layout
+  --pg: 16px; // page gutter
+  --max: 480px; // max content width
 }
 
-// ── Base ────────────────────────────────────────
+
+// ── 3. Ionic overrides ───────────────────────────────────────
 * {
   -webkit-tap-highlight-color: transparent;
   box-sizing: border-box;
@@ -114,23 +164,20 @@ ion-toolbar {
   --background: var(--surface);
   --color: var(--text);
   --border-color: transparent;
-  box-shadow: 0 1px 0 var(--border);
 }
 
-// ── Tab Bar (Purple Styled) ────────────────────
 ion-tab-bar {
-  --background: white;
-  --border: none;
+  --background: var(--surface);
   border-top: 1px solid var(--border);
+  border-radius: var(--r-xl) var(--r-xl) 0 0;
   height: 64px;
-  padding: 6px 12px;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+  padding: 0 8px;
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.06);
 }
 
 ion-tab-button {
   --color: var(--muted2);
-  --color-selected: var(--v-purple);
-  --ripple-color: var(--v-purple-dim);
+  --color-selected: var(--violet);
 
   ion-label {
     font-family: var(--font-body);
@@ -143,205 +190,1415 @@ ion-tab-button {
     font-size: 20px;
   }
 
-  &.tab-selected {
-    ion-icon {
-      color: var(--v-purple);
-    }
-
-    ion-label {
-      color: var(--v-purple);
-    }
+  &.tab-selected ion-icon {
+    color: var(--violet);
   }
 }
 
-// ── Cards ────────────────────────────────────
 ion-card {
   --background: var(--surface);
-  --color: var(--text);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-sm);
   border: 1px solid var(--border);
-  margin: 0 0 12px 0;
+  margin: 0 0 10px;
 }
 
 ion-item {
   --background: transparent;
   --color: var(--text);
   --border-color: var(--border);
-  --highlight-color-focused: var(--v-purple);
+  --highlight-color-focused: var(--violet);
   --padding-start: 0;
   --inner-padding-end: 0;
 }
 
-// ── Inputs ────────────────────────────────────
-ion-input,
-ion-textarea {
-  --background: var(--surface2);
-  --color: var(--text);
-  --placeholder-color: var(--muted2);
-  --border-radius: var(--radius);
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 14px;
-  --padding-bottom: 14px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius);
-  font-family: var(--font-body);
-
-  &.has-focus {
-    border-color: var(--v-purple);
-    box-shadow: 0 0 0 3px var(--v-purple-dim);
-  }
+ion-toggle {
+  --track-background: var(--border2);
+  --track-background-checked: var(--violet);
 }
 
-// ── Buttons ────────────────────────────────────
-ion-button {
-  --border-radius: var(--radius);
-  font-family: var(--font-display);
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  text-transform: none;
-
-  &.primary-btn {
-    --background: var(--v-purple);
-    --color: white;
-    --box-shadow: var(--shadow-purple);
-
-    &:hover {
-      --background: var(--v-purple-dark);
-    }
-  }
-
-  &.ghost-btn {
-    --background: var(--surface2);
-    --color: var(--text);
-    border: 1.5px solid var(--border);
-  }
+ion-spinner {
+  --color: var(--violet);
 }
 
-// ── FAB (Purple) ──────────────────────────────
 ion-fab-button {
-  --background: var(--v-purple);
+  --background: var(--violet);
   --color: white;
-  --box-shadow: var(--shadow-purple);
+  --box-shadow: var(--shadow-violet);
 }
 
-// ── Typography ─────────────────────────────────
+
+// ── 4. Typography ────────────────────────────────────────────
 .display-title {
   font-family: var(--font-display);
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
   color: var(--text);
 }
 
-.section-title {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: 800;
-  color: var(--muted);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  margin: 0 0 12px 0;
-}
-
-.amount-text {
-  font-family: var(--font-display);
+.section-label {
+  font-size: 11px;
   font-weight: 700;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  display: block;
 }
 
+.field-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted2);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 7px;
+}
+
+.field-hint {
+  font-size: 11px;
+  color: var(--muted2);
+  margin-top: 5px;
+  line-height: 1.5;
+}
+
+// colour helpers
 .muted {
   color: var(--muted);
 }
 
-.accent {
-  color: var(--v-purple);
+.muted2 {
+  color: var(--muted2);
 }
 
-.green {
+.c-violet {
+  color: var(--violet);
+}
+
+.c-green {
   color: var(--green);
 }
 
-.red {
+.c-red {
   color: var(--red);
 }
 
-.blue {
-  color: var(--blue);
+
+// ── 5. Page wrapper ──────────────────────────────────────────
+.page-wrap {
+  padding: var(--pg);
+  max-width: var(--max);
+  margin: 0 auto;
+  padding-bottom: 100px;
 }
 
-.purple {
-  color: var(--v-purple);
+
+// ── 6. Page header ───────────────────────────────────────────
+/*
+  Standard violet gradient header.
+  Structure every page uses:
+
+  <div class="v-header">
+    <div class="vh-top">
+      <div>
+        <h1 class="vh-title">Title</h1>
+        <p class="vh-sub">subtitle</p>
+      </div>
+      <button class="vh-fab">icon</button>   ← optional
+    </div>
+    <!-- optional: .month-scroll  |  .month-nav  |  .search-bar-header  |  .summary-pills -->
+  </div>
+*/
+
+.v-header {
+  background: var(--header-grad);
+  padding: 54px var(--pg) 18px;
+  border-radius: 0 0 var(--r-2xl) var(--r-2xl);
+  margin-bottom: 6px;
 }
 
-.orange {
-  color: var(--orange);
+.vh-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
 }
 
-.pink {
-  color: var(--pink);
+.vh-title {
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -0.3px;
+  margin-bottom: 2px;
 }
 
-// ── Badges ─────────────────────────────────────
-.badge {
-  display: inline-flex;
+.vh-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.65);
+}
+
+// Top-right icon button inside header
+.vh-fab {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(8px);
+  color: white;
+  font-size: 22px;
+  display: flex;
   align-items: center;
-  padding: 3px 10px;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+
+  &:active {
+    background: rgba(255, 255, 255, 0.28);
+  }
+
+  &.spinning {
+    animation: spin 0.8s linear infinite;
+  }
+}
+
+// Horizontal month chips inside header
+.month-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  margin-bottom: 14px;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.month-chip {
+  flex-shrink: 0;
+  padding: 6px 16px;
   border-radius: 20px;
-  font-size: 10px;
+  border: none;
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.7);
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: all 0.18s;
+
+  &.active {
+    background: white;
+    color: var(--violet);
+    font-weight: 700;
+  }
+}
+
+// Prev / next month navigator (Reports, Budget)
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 14px 0 6px;
+}
+
+.mnav {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.month-display {
+  font-family: var(--font-display);
+  font-size: 16px;
   font-weight: 700;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
+  color: white;
+  min-width: 130px;
+  text-align: center;
+}
 
-  &.badge-purple {
-    background: var(--v-purple-dim);
-    color: var(--v-purple);
+// Search bar inside the violet header
+.search-bar-header {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--r);
+  padding: 0 14px;
+  margin-bottom: 14px;
+  transition: background 0.2s, border-color 0.2s;
+
+  &.focused {
+    background: rgba(255, 255, 255, 0.25);
+    border-color: rgba(255, 255, 255, 0.5);
   }
 
-  &.badge-gold {
-    background: rgba(245, 200, 66, 0.15);
-    color: #d97706;
+  ion-icon {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 17px;
+    flex-shrink: 0;
   }
 
-  &.badge-green {
-    background: var(--green-dim);
-    color: var(--green);
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 11px 10px;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
   }
 
-  &.badge-red {
-    background: var(--red-dim);
+  .search-clear {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+
+// ── 7. Cards ─────────────────────────────────────────────────
+.card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-xs);
+  overflow: hidden;
+}
+
+// Card that overlaps/floats below the header
+.card-overlap {
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 18px 20px;
+  margin: -2px var(--pg) 14px;
+  box-shadow: 0 4px 20px rgba(124, 58, 237, 0.12);
+  border: 1px solid rgba(124, 58, 237, 0.08);
+}
+
+
+// ── 8. Transaction rows ──────────────────────────────────────
+.txn-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow);
+  }
+}
+
+.txn-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 20px;
+}
+
+.txn-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.txn-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.txn-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.txn-bank {
+  font-size: 11px;
+  color: var(--muted2);
+}
+
+.txn-right {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.txn-time {
+  font-size: 10px;
+  color: var(--muted2);
+  margin-top: 2px;
+}
+
+.txn-amount {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+
+  &.debit {
     color: var(--red);
   }
 
-  &.badge-blue {
-    background: var(--blue-dim);
-    color: var(--blue);
-  }
-
-  &.badge-orange {
-    background: var(--orange-dim);
-    color: var(--orange);
+  &.credit {
+    color: var(--green);
   }
 }
 
-// ── Scrollbar ─────────────────────────────────
-::-webkit-scrollbar {
-  width: 3px;
+// Date group header
+.date-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 4px 6px;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
+.date-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
 }
 
-::-webkit-scrollbar-thumb {
-  background: var(--border);
+.date-total {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+
+// ── 9. Badges & chips ────────────────────────────────────────
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badge-violet {
+  background: var(--violet-dim);
+  color: var(--violet);
+}
+
+.badge-green {
+  background: var(--green-bg);
+  color: var(--green-text);
+}
+
+.badge-red {
+  background: var(--red-bg);
+  color: var(--red-text);
+}
+
+.badge-gold {
+  background: var(--gold-bg);
+  color: var(--gold-text);
+}
+
+.badge-blue {
+  background: var(--blue-bg);
+  color: var(--blue-text);
+}
+
+.badge-debit {
+  background: var(--red-bg);
+  color: var(--red);
+}
+
+.badge-credit {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.badge-sms {
+  background: var(--green-bg);
+  color: var(--green-text);
+}
+
+.badge-manual {
+  background: var(--blue-bg);
+  color: var(--blue-text);
+}
+
+.source-badge {
+  background: #ede9fe;
+  color: var(--violet);
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+// Confidence dot (small circle)
+.conf-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.conf-dot.high {
+  background: var(--green);
+}
+
+.conf-dot.medium {
+  background: var(--gold);
+}
+
+.conf-dot.low {
+  background: var(--red);
+}
+
+// Confidence badge (pill)
+.conf-badge {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.conf-badge.high {
+  background: var(--green-bg);
+  color: var(--green-text);
+}
+
+.conf-badge.medium {
+  background: var(--gold-bg);
+  color: var(--gold-text);
+}
+
+.conf-badge.low {
+  background: var(--red-bg);
+  color: var(--red-text);
+}
+
+// Category chip used inside transaction rows (bg/color set per row)
+.cat-chip {
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+// Bank pill
+.bank-pill {
+  background: var(--surface3);
+  border-radius: 6px;
+  padding: 2px 7px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+}
+
+
+// ── 10. Category colours ─────────────────────────────────────
+// Apply to the PARENT element — children use var(--cc) / var(--cb)
+.cc-fixed {
+  --cc: var(--cat-fixed);
+  --cb: #fef3c7;
+}
+
+.cc-food {
+  --cc: var(--cat-food);
+  --cb: #dbeafe;
+}
+
+.cc-savings {
+  --cc: var(--cat-savings);
+  --cb: #d1fae5;
+}
+
+.cc-self {
+  --cc: var(--cat-self);
+  --cb: #ede9fe;
+}
+
+.cc-fun {
+  --cc: var(--cat-fun);
+  --cb: #ffedd5;
+}
+
+.cc-giving {
+  --cc: var(--cat-giving);
+  --cb: #fce7f3;
+}
+
+.cc-uncat {
+  --cc: var(--cat-uncat);
+  --cb: var(--surface3);
+}
+
+// Icon circle coloured by parent .cc-*
+.cat-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex-shrink: 0;
+  background: var(--cb, var(--surface3));
+}
+
+// Small coloured dot
+.cat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--cc, var(--muted2));
+}
+
+
+// ── 11. Buttons ──────────────────────────────────────────────
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 13px 22px;
+  border-radius: var(--r);
+  border: none;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.18s, transform 0.12s;
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &.full {
+    width: 100%;
+  }
+
+  &.btn-primary {
+    background: linear-gradient(135deg, var(--violet), var(--violet-dark));
+    color: white;
+    box-shadow: var(--shadow-violet);
+  }
+
+  &.btn-ghost {
+    background: var(--surface);
+    color: var(--text2);
+    border: 1.5px solid var(--border2);
+  }
+
+  &.btn-danger {
+    background: linear-gradient(135deg, var(--red), #dc2626);
+    color: white;
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.3);
+  }
+
+  &.btn-soft {
+    background: var(--violet-dim);
+    color: var(--violet);
+    border: none;
+  }
+
+  &.btn-signout {
+    background: var(--red-bg);
+    color: var(--red);
+    border: 1.5px solid rgba(239, 68, 68, 0.25);
+  }
+
+  ion-spinner {
+    --color: white;
+    width: 18px;
+    height: 18px;
+  }
+}
+
+// Floating action button (fixed position)
+.fab-btn {
+  position: fixed;
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  right: 20px;
+  z-index: 100;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--violet), var(--violet-dark));
+  color: white;
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow-violet);
+  transition: transform 0.18s;
+
+  &:active {
+    transform: scale(0.92);
+  }
+}
+
+// Small square icon button (edit / delete actions in rows)
+.icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border);
+  background: var(--surface3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 15px;
+  color: var(--muted);
+  transition: all 0.15s;
+
+  &:active {
+    background: var(--border);
+  }
+
+  &.danger {
+    color: var(--red);
+    background: var(--red-bg);
+    border-color: transparent;
+  }
+
+  &.edit {
+    color: var(--violet);
+    background: var(--violet-dim);
+    border-color: transparent;
+  }
+}
+
+
+// ── 12. Forms ────────────────────────────────────────────────
+.field-group {
+  margin-bottom: 14px;
+}
+
+.f-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--surface2);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:focus {
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px var(--violet-dim);
+  }
+
+  &::placeholder {
+    color: var(--muted2);
+  }
+}
+
+.f-select {
+  @extend .f-input;
+  cursor: pointer;
+}
+
+// Input with icon prefix — wrap in .f-icon-wrap
+.f-icon-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.f-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--muted2);
+  font-size: 17px;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.f-icon-end {
+  position: absolute;
+  right: 14px;
+  color: var(--muted2);
+  font-size: 17px;
+  cursor: pointer;
+}
+
+.f-input-icon {
+  @extend .f-input;
+  padding-left: 44px;
+  padding-right: 44px;
+}
+
+// Debit / Credit toggle
+.type-toggle {
+  display: flex;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.type-btn {
+  flex: 1;
+  padding: 11px;
+  border: none;
+  background: var(--surface);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.15s;
+
+  &.active-debit {
+    background: var(--red-bg);
+    color: var(--red);
+  }
+
+  &.active-credit {
+    background: var(--green-bg);
+    color: var(--green);
+  }
+}
+
+
+// ── 13. Bottom sheets ────────────────────────────────────────
+.sheet-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  z-index: 400;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  transition: background 0.3s;
+
+  &.open {
+    background: rgba(0, 0, 0, 0.48);
+    pointer-events: all;
+  }
+}
+
+.sheet-card {
+  width: 100%;
+  max-width: var(--max);
+  margin: 0 auto;
+  background: var(--surface);
+  border-radius: var(--r-2xl) var(--r-2xl) 0 0;
+  padding: 12px var(--pg) max(36px, env(safe-area-inset-bottom));
+  max-height: 92vh;
+  overflow-y: auto;
+  transform: translateY(100%);
+  transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .sheet-overlay.open & {
+    transform: translateY(0);
+  }
+}
+
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border2);
+  margin: 0 auto 18px;
+}
+
+.sheet-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  margin-bottom: 18px;
+}
+
+// Centred header used in Transaction detail sheet
+.sheet-header-center {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.sheet-big-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  margin: 0 auto 12px;
+}
+
+.sheet-amount {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 800;
+  margin-bottom: 4px;
+
+  &.debit {
+    color: var(--red);
+  }
+
+  &.credit {
+    color: var(--green);
+  }
+}
+
+.sheet-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.sheet-date {
+  font-size: 12px;
+  color: var(--muted2);
+}
+
+// Key–value block inside sheets
+.sheet-detail-block {
+  background: var(--surface2);
+  border-radius: var(--r);
+  padding: 4px var(--pg);
+  margin-bottom: 16px;
+}
+
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.detail-key {
+  font-size: 13px;
+  color: var(--muted2);
+}
+
+.detail-val {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.sheet-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+
+// ── 14. Search bars ──────────────────────────────────────────
+// White standalone search box (outside header)
+.search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r);
+  padding: 0 14px;
+  height: 44px;
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 12px;
+
+  &:focus-within {
+    border-color: var(--violet);
+    box-shadow: 0 0 0 3px var(--violet-dim);
+  }
+
+  ion-icon {
+    font-size: 17px;
+    color: var(--muted2);
+    flex-shrink: 0;
+  }
+
+  input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: var(--font-body);
+    font-size: 14px;
+    color: var(--text);
+
+    &::placeholder {
+      color: var(--muted2);
+    }
+  }
+}
+
+
+// ── 15. Skeleton loaders ─────────────────────────────────────
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Light — on white cards
+.skeleton {
+  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--r-sm);
+}
+
+// Dark — on coloured/dark surfaces
+.skeleton-dark {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.05) 25%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0.05) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--r-sm);
+}
+
+// Pre-built skeleton row (avatar + lines)
+.skel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px;
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  margin-bottom: 8px;
+}
+
+.skel-avatar {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+}
+
+.skel-body {
+  flex: 1;
+}
+
+.skel-line {
+  height: 12px;
   border-radius: 4px;
+  margin-bottom: 7px;
 }
 
-// ── Animations ────────────────────────────────
+.skel-line-sm {
+  height: 10px;
+  border-radius: 4px;
+  width: 55%;
+}
+
+
+// ── 16. Empty states ─────────────────────────────────────────
+.empty-state {
+  text-align: center;
+  padding: 64px 24px;
+}
+
+.empty-icon {
+  font-size: 52px;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.empty-title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text2);
+  margin-bottom: 8px;
+}
+
+.empty-sub {
+  font-size: 13px;
+  color: var(--muted2);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+
+// ── 17. Progress bars ────────────────────────────────────────
+.prog-track {
+  background: var(--surface3);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.prog-fill {
+  border-radius: 10px;
+  transition: width 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.prog-green {
+  background: var(--green);
+}
+
+.prog-gold {
+  background: var(--gold);
+}
+
+.prog-red {
+  background: var(--red);
+}
+
+.prog-violet {
+  background: var(--violet);
+}
+
+.prog-blue {
+  background: var(--blue);
+}
+
+.prog-h-xs {
+  height: 3px;
+}
+
+.prog-h-sm {
+  height: 5px;
+}
+
+.prog-h {
+  height: 6px;
+}
+
+.prog-h-lg {
+  height: 8px;
+}
+
+
+// ── 18. Summary pills (inside v-header) ──────────────────────
+.summary-pills {
+  display: flex;
+  gap: 10px;
+}
+
+.s-pill {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--r);
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+
+  ion-icon {
+    font-size: 16px;
+    color: white;
+  }
+
+  .sp-val {
+    font-family: var(--font-display);
+    font-size: 13px;
+    font-weight: 700;
+    color: white;
+  }
+
+  .sp-lbl {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.6);
+  }
+
+  &.red ion-icon {
+    color: #fca5a5;
+  }
+
+  &.green ion-icon {
+    color: #6ee7b7;
+  }
+
+  &.purple ion-icon {
+    color: #c4b5fd;
+  }
+}
+
+
+// ── 19. Filter bar ───────────────────────────────────────────
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px var(--pg) 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.filter-chip {
+  flex-shrink: 0;
+  padding: 6px 16px;
+  border-radius: 20px;
+  border: none;
+  background: var(--surface);
+  color: var(--muted);
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow-xs);
+  transition: all 0.15s;
+
+  &.active {
+    background: var(--violet);
+    color: white;
+  }
+}
+
+.txn-count {
+  font-size: 12px;
+  color: var(--muted2);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+
+// ── 20. Settings rows ────────────────────────────────────────
+.settings-card {
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-xs);
+  margin-bottom: 8px;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px var(--pg);
+  cursor: pointer;
+  transition: background 0.15s;
+
+  &:active {
+    background: var(--surface2);
+  }
+}
+
+.setting-divider {
+  height: 1px;
+  background: var(--surface2);
+  margin: 0 var(--pg);
+}
+
+.setting-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 18px;
+}
+
+.setting-body {
+  flex: 1;
+}
+
+.setting-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.setting-value {
+  font-size: 12px;
+  color: var(--muted2);
+  margin-top: 1px;
+}
+
+.setting-arrow {
+  color: var(--border2);
+  font-size: 16px;
+}
+
+
+// ── 21. Avoid chips ──────────────────────────────────────────
+.avoid-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--red-bg);
+  border: 1.5px solid rgba(239, 68, 68, 0.2);
+  border-radius: 20px;
+  padding: 6px 10px;
+}
+
+.avoid-emoji {
+  font-size: 18px;
+}
+
+.avoid-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--red);
+}
+
+.avoid-del {
+  background: transparent;
+  border: none;
+  color: var(--red);
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0;
+
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+.avoid-add {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: var(--surface3);
+  border: 1.5px dashed var(--border2);
+  border-radius: 20px;
+  padding: 6px 12px;
+  color: var(--muted2);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+
+  ion-icon {
+    font-size: 14px;
+  }
+}
+
+
+// ── 22. Merchant rule cards ──────────────────────────────────
+.rule-card {
+  background: var(--surface);
+  border-radius: var(--r-lg);
+  padding: 14px;
+  border: 1px solid var(--border);
+  margin-bottom: 10px;
+  transition: opacity 0.2s;
+
+  &.disabled {
+    opacity: 0.42;
+  }
+}
+
+.match-badge {
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.match-contains {
+  background: var(--blue-bg);
+  color: var(--blue-text);
+}
+
+.match-startsWith {
+  background: var(--green-bg);
+  color: var(--green-text);
+}
+
+.match-exact {
+  background: #fdf4ff;
+  color: #86198f;
+}
+
+.match-regex {
+  background: var(--gold-bg);
+  color: var(--gold-text);
+}
+
+.pattern-text {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+// ── 23. Animations ───────────────────────────────────────────
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(14px);
   }
 
   to {
@@ -360,13 +1617,9 @@ ion-fab-button {
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-
-  100% {
-    background-position: 200% 0;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -378,90 +1631,43 @@ ion-fab-button {
   }
 
   50% {
-    opacity: 0.6;
+    opacity: 0.5;
   }
 }
 
-.animate-fade-up {
-  animation: fadeUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+.animate-up {
+  animation: fadeUp 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-// ── Skeleton Loader ────────────────────────────
-.skeleton {
-  background: linear-gradient(90deg, #e5e7eb 25%, #f3f4f6 50%, #e5e7eb 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
-  border-radius: var(--radius-sm);
+.animate-in {
+  animation: fadeIn 0.3s ease both;
 }
 
-// ── Progress Bar ───────────────────────────────
-.progress-track {
-  height: 5px;
-  background: var(--border);
-  border-radius: 10px;
-  overflow: hidden;
-
-  .progress-fill {
-    height: 100%;
-    border-radius: 10px;
-    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-  }
+.spinning {
+  animation: spin 0.8s linear infinite;
 }
 
-// ── Alert Overrides (Purple) ───────────────────
-.v-alert {
-  --background: white;
-  --color: var(--text);
 
-  .alert-head {
-    padding: 20px 20px 8px;
-  }
-
-  .alert-title {
-    font-family: var(--font-display);
-    font-size: 18px;
-    font-weight: 800;
-  }
-
-  .alert-sub-title,
-  .alert-message {
-    color: var(--muted);
-    font-size: 13px;
-  }
-
-  .alert-button-group {
-    padding: 8px 12px 16px;
-    gap: 8px;
-    flex-direction: row;
-  }
-
-  .alert-button {
-    border-radius: 12px !important;
-    font-family: var(--font-display) !important;
-    font-weight: 700 !important;
-  }
-
-  .alert-button-role-cancel {
-    color: var(--muted) !important;
-    border: 1.5px solid var(--border) !important;
-  }
-
-  .alert-button-role-destructive {
-    background: #fee2e2 !important;
-    color: var(--red) !important;
-  }
+// ── 24. Scrollbar ────────────────────────────────────────────
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
 }
 
-// ── Toast Overrides ────────────────────────────
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border2);
+  border-radius: 4px;
+}
+
+
+// ── 25. Toast ────────────────────────────────────────────────
 ion-toast {
-  --background: white;
-  --color: var(--text);
-  --border-radius: var(--radius);
-  --box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  --background: var(--text);
+  --color: white;
+  --border-radius: var(--r);
   font-family: var(--font-body);
-}
-
-// ── Page Transition ───────────────────────────
-ion-router-outlet>.ion-page {
-  animation: fadeIn 0.25s ease;
 }

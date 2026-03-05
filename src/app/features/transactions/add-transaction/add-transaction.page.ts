@@ -1,3 +1,4 @@
+// ─── src/app/features/transactions/add-transaction/add-transaction.page.ts ─
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -12,26 +13,61 @@ import { format } from 'date-fns';
   standalone: true,
   imports: [CommonModule, FormsModule, IonicModule],
   template: `
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start"><ion-back-button defaultHref="/tabs/transactions" color="warning"></ion-back-button></ion-buttons>
-        <ion-title><span class="display-title" style="font-size:18px">Add Transaction</span></ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <div style="padding:20px;max-width:480px;margin:0 auto">
+    <ion-content [fullscreen]="true">
+
+      <!-- Header -->
+      <div class="v-header" style="padding-bottom:22px">
+        <div class="vh-top" style="margin-bottom:0">
+          <div>
+            <h1 class="vh-title">Add Transaction</h1>
+            <p class="vh-sub">Log a new debit or credit entry</p>
+          </div>
+          <button class="vh-fab" (click)="goBack()">
+            <ion-icon name="close-outline"></ion-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="page-wrap" style="padding-top:12px">
+
+        <!-- Type toggle -->
         <div class="type-toggle">
-          <button [class.active]="type === 'debit'" (click)="type='debit'">Debit</button>
-          <button [class.active]="type === 'credit'" (click)="type='credit'">Credit</button>
+          <button class="type-btn" [class.active-debit]="type === 'debit'"
+            (click)="type='debit'">
+            <ion-icon name="arrow-up-outline"></ion-icon> Debit
+          </button>
+          <button class="type-btn" [class.active-credit]="type === 'credit'"
+            (click)="type='credit'">
+            <ion-icon name="arrow-down-outline"></ion-icon> Credit
+          </button>
         </div>
-        <div class="field-group"><label class="field-label">Amount (₹)</label>
-          <input type="number" [(ngModel)]="amount" placeholder="0" class="auth-input" style="padding:13px 16px"/>
+
+        <!-- Amount -->
+        <div class="field-group">
+          <label class="field-label">Amount (₹)</label>
+          <div class="f-icon-wrap">
+            <ion-icon name="logo-usd" class="f-icon" style="font-size:14px;color:var(--violet)"></ion-icon>
+            <input type="number" [(ngModel)]="amount" placeholder="0.00"
+              class="f-input f-input-icon at-amount-input"
+              [class.debit-input]="type === 'debit'"
+              [class.credit-input]="type === 'credit'"/>
+          </div>
         </div>
-        <div class="field-group"><label class="field-label">Merchant / Description</label>
-          <input type="text" [(ngModel)]="merchant" placeholder="Zomato, Amazon..." class="auth-input" style="padding:13px 16px"/>
+
+        <!-- Merchant -->
+        <div class="field-group">
+          <label class="field-label">Merchant / Description</label>
+          <div class="f-icon-wrap">
+            <ion-icon name="storefront-outline" class="f-icon"></ion-icon>
+            <input type="text" [(ngModel)]="merchant" placeholder="e.g. Zomato, Amazon, SIP..."
+              class="f-input f-input-icon"/>
+          </div>
         </div>
-        <div class="field-group"><label class="field-label">Category</label>
-          <select [(ngModel)]="category" class="cat-select">
+
+        <!-- Category -->
+        <div class="field-group">
+          <label class="field-label">Category</label>
+          <select [(ngModel)]="category" class="f-select">
             <option value="fixed_costs">🏦 Fixed Costs</option>
             <option value="food_household">🛒 Food & Household</option>
             <option value="savings">💰 Savings</option>
@@ -41,51 +77,100 @@ import { format } from 'date-fns';
             <option value="uncategorized">❓ Uncategorized</option>
           </select>
         </div>
-        <div class="field-group"><label class="field-label">Note (optional)</label>
-          <input type="text" [(ngModel)]="note" placeholder="Add a note..." class="auth-input" style="padding:13px 16px"/>
+
+        <!-- Bank (optional) -->
+        <div class="field-group">
+          <label class="field-label">Bank / Account <span class="muted2">(optional)</span></label>
+          <div class="f-icon-wrap">
+            <ion-icon name="business-outline" class="f-icon"></ion-icon>
+            <input type="text" [(ngModel)]="bank" placeholder="HDFC, SBI, Axis..."
+              class="f-input f-input-icon"/>
+          </div>
         </div>
-        <button class="auth-btn" (click)="save()" [disabled]="!amount || saving">
-          <span *ngIf="!saving">Save Transaction</span>
-          <ion-spinner *ngIf="saving" name="crescent" style="width:18px;height:18px"></ion-spinner>
+
+        <!-- Note -->
+        <div class="field-group">
+          <label class="field-label">Note <span class="muted2">(optional)</span></label>
+          <div class="f-icon-wrap">
+            <ion-icon name="document-text-outline" class="f-icon" style="top:14px;bottom:auto"></ion-icon>
+            <textarea [(ngModel)]="note" placeholder="Add a note..."
+              rows="2" class="f-input f-input-icon at-textarea"></textarea>
+          </div>
+        </div>
+
+        <!-- Amount preview badge -->
+        <div class="at-preview" *ngIf="amount > 0" [class.debit]="type==='debit'" [class.credit]="type==='credit'">
+          <ion-icon [name]="type === 'debit' ? 'arrow-up-circle' : 'arrow-down-circle'"></ion-icon>
+          <span>{{ type === 'debit' ? '− ' : '+ ' }}₹{{ amount | number }}</span>
+          <span class="at-preview-label">{{ type | titlecase }}</span>
+        </div>
+
+        <!-- Save button -->
+        <button class="btn btn-primary full" style="margin-top:8px"
+          (click)="save()" [disabled]="!amount || saving">
+          <ion-spinner *ngIf="saving" name="crescent"></ion-spinner>
+          <span *ngIf="!saving">
+            <ion-icon name="checkmark-outline"></ion-icon>
+            Save Transaction
+          </span>
         </button>
+
       </div>
     </ion-content>
   `,
   styles: [`
     ion-content { --background: var(--bg); }
-    .type-toggle { display:flex; gap:8px; margin-bottom:20px; }
-    .type-toggle button {
-      flex:1; padding:12px; border-radius:var(--radius); border:1px solid var(--border);
-      background:var(--surface); color:var(--muted); font-family:var(--font-display);
-      font-size:14px; font-weight:700; cursor:pointer;
-      &.active { background:var(--accent); color:#0b0f1a; border-color:var(--accent); }
+
+    /* Amount input tint by type */
+    .at-amount-input { font-family: var(--font-display); font-size: 20px; font-weight: 700; }
+    .debit-input  { color: var(--red);   border-color: rgba(239,68,68,0.3);  &:focus { border-color: var(--red);   box-shadow: 0 0 0 3px var(--red-dim); } }
+    .credit-input { color: var(--green); border-color: rgba(16,185,129,0.3); &:focus { border-color: var(--green); box-shadow: 0 0 0 3px var(--green-dim); } }
+
+    /* Textarea fix */
+    .at-textarea { padding-top: 12px; resize: none; line-height: 1.5; }
+
+    /* Preview badge */
+    .at-preview {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 18px; border-radius: var(--r); margin-bottom: 12px;
+      font-family: var(--font-display); font-size: 18px; font-weight: 700;
+      &.debit  { background: var(--red-bg);   color: var(--red);   ion-icon { font-size: 22px; } }
+      &.credit { background: var(--green-bg); color: var(--green); ion-icon { font-size: 22px; } }
     }
-    .field-group { margin-bottom:16px; }
-    .field-label { display:block; font-size:11px; font-weight:600; color:var(--muted); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:7px; }
-    .auth-input { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); color:var(--text); font-family:var(--font-body); font-size:14px; outline:none; &::placeholder { color:var(--muted); } }
-    .cat-select { width:100%; background:var(--surface2); border:1px solid var(--border); border-radius:var(--radius); padding:12px 16px; color:var(--text); font-family:var(--font-body); font-size:13px; outline:none; }
-    .auth-btn { width:100%; padding:15px; border-radius:var(--radius); border:none; background:var(--accent); color:#0b0f1a; font-family:var(--font-display); font-size:15px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; margin-top:8px; box-shadow:var(--shadow-glow-gold); &:disabled { opacity:0.6; } }
+    .at-preview-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; margin-left: auto; opacity: 0.6; }
   `]
 })
 export class AddTransactionPage {
   type: TransactionType = 'debit';
   amount = 0;
   merchant = '';
+  bank = '';
   category: CategoryKey = 'uncategorized';
   note = '';
   saving = false;
-  constructor(private budgetService: BudgetService, private router: Router) {}
+
+  constructor(private budgetService: BudgetService, private router: Router) { }
+
+  goBack() { this.router.navigateByUrl('/tabs/transactions'); }
+
   async save() {
     if (!this.amount) return;
     this.saving = true;
     try {
       await this.budgetService.addTransaction({
-        amount: this.amount, type: this.type,
-        category: this.category, merchant: this.merchant,
-        note: this.note, date: new Date(),
-        month: format(new Date(), 'yyyy-MM'), source: 'manual'
+        amount: this.amount,
+        type: this.type,
+        category: this.category,
+        merchant: this.merchant,
+        bank: this.bank || undefined,
+        note: this.note || undefined,
+        date: new Date(),
+        month: format(new Date(), 'yyyy-MM'),
+        source: 'manual'
       });
       this.router.navigateByUrl('/tabs/transactions');
-    } finally { this.saving = false; }
+    } finally {
+      this.saving = false;
+    }
   }
 }

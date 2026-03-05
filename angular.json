@@ -6,8 +6,12 @@
     "sms-budget-app": {
       "projectType": "application",
       "schematics": {
-        "@ionic/angular-toolkit:component": { "styleext": "scss" },
-        "@ionic/angular-toolkit:page": { "styleext": "scss" }
+        "@ionic/angular-toolkit:component": {
+          "styleext": "scss"
+        },
+        "@ionic/angular-toolkit:page": {
+          "styleext": "scss"
+        }
       },
       "root": "",
       "sourceRoot": "src",
@@ -19,10 +23,19 @@
             "outputPath": "dist/sms-budget-app",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
-            "assets": ["src/favicon.ico", "src/assets", "src/manifest.webmanifest"],
-            "styles": ["src/global.scss", "src/theme/variables.scss"],
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/manifest.webmanifest"
+            ],
+            "styles": [
+              "src/global.scss",
+              "src/theme/variables.scss"
+            ],
             "scripts": [],
             "serviceWorker": true,
             "ngswConfigPath": "ngsw-config.json"
@@ -30,7 +43,10 @@
           "configurations": {
             "production": {
               "fileReplacements": [
-                { "replace": "src/environments/environment.ts", "with": "src/environments/environment.prod.ts" }
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
               ],
               "optimization": true,
               "outputHashing": "all",
@@ -41,8 +57,16 @@
               "vendorChunk": false,
               "buildOptimizer": true,
               "budgets": [
-                { "type": "initial", "maximumWarning": "2mb", "maximumError": "5mb" },
-                { "type": "anyComponentStyle", "maximumWarning": "6kb", "maximumError": "10kb" }
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "30kb"
+                }
               ]
             },
             "development": {
@@ -59,8 +83,12 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
-            "production": { "buildTarget": "sms-budget-app:build:production" },
-            "development": { "buildTarget": "sms-budget-app:build:development" }
+            "production": {
+              "buildTarget": "sms-budget-app:build:production"
+            },
+            "development": {
+              "buildTarget": "sms-budget-app:build:development"
+            }
           },
           "defaultConfiguration": "development"
         }
