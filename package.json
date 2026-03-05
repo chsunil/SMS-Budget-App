@@ -2,6 +2,7 @@
   "name": "sms-budget-app",
   "version": "1.0.0",
   "description": "SMS Budget Planner - Ionic + Angular + Firebase",
+  "main": "main.js",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201",
@@ -14,7 +15,9 @@
     "android:run": "ionic capacitor run android -l --external",
     "android:open": "ionic capacitor open android",
     "pwa:serve": "npx http-server ./dist/sms-budget-app -p 8080",
-    "capacitor": "npm run build && npx cap sync android && npx cap open android"
+    "capacitor": "npm run build--prod && npx cap sync android && npx cap open android",
+    "electron:start": "ng build --base-href ./ && electron .",
+    "electron:build": "ng build --configuration production --base-href ./ && electron-builder"
   },
   "private": true,
   "dependencies": {
@@ -51,6 +54,8 @@
     "@capacitor/cli": "6.2.1",
     "@ionic/cli": "^7.2.0",
     "@types/jasmine": "~5.1.4",
+    "electron": "^40.7.0",
+    "electron-builder": "^26.8.1",
     "jasmine-core": "~5.1.2",
     "karma": "~6.4.3",
     "karma-chrome-launcher": "~3.2.0",
