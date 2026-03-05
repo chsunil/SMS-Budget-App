@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "Angular Dev Server",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["C:/Program Files/nodejs/node_modules/npm/bin/npm-cli.js", "run", "start"],
+      "port": 4201
+    },
+    {
+      "name": "PWA Serve (dist)",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "pwa:serve"],
+      "port": 8080
+    }
+  ]
+}
