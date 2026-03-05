@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { SmsReaderService } from '../../core/services/sms-reader.service';
 import { SmsParserService } from '../../core/services/sms-parser.service';
 import { BudgetService } from '../../core/services/budget.service';
-import { ParsedSMS, CategoryKey } from '../../core/models';
+import { ParsedSMS, CategoryKey, DEFAULT_BUDGET_CATEGORIES } from '../../core/models';
 import { InrPipe } from '../../shared/pipes/inr.pipe';
 import { format, isToday, isYesterday } from 'date-fns';
 
@@ -25,7 +25,10 @@ export interface SmsMessage {
   isArchived: boolean;
   parsed?: ParsedSMS;
   importCategory?: CategoryKey;
+  importSubcategory?: string;
   imported?: boolean;
+  importedCategory?: string;
+  importedSubcategory?: string;
 }
 
 // ── Classifier patterns ────────────────────────
@@ -147,8 +150,15 @@ const PAGE_SIZE = 50;
           <div class="count-bar">
             <span class="count-text">
               Showing {{ visibleMessages.length }} of {{ filteredMessages.length }}
+              <span class="days-badge" *ngIf="daysLoaded <= 30">
+                {{ daysLoaded === 1 ? 'Today' : 'Last ' + daysLoaded + ' days' }}
+              </span>
             </span>
-            <button class="mark-all-btn" *ngIf="getUnread(activeSegment) > 0" (click)="markAllRead()">
+            <span class="loading-more-text" *ngIf="loadingMore">
+              <ion-spinner name="dots" style="width:14px;height:14px;--color:var(--muted)"></ion-spinner>
+              loading older…
+            </span>
+            <button class="mark-all-btn" *ngIf="getUnread(activeSegment) > 0 && !loadingMore" (click)="markAllRead()">
               <ion-icon name="checkmark-done-outline"></ion-icon>
               Mark all read
             </button>
@@ -294,25 +304,64 @@ const PAGE_SIZE = 50;
 
               <div class="already-imported" *ngIf="selectedMsg.imported">
                 <ion-icon name="checkmark-circle"></ion-icon>
-                Already added to budget
+                <div>
+                  <div>Added to budget</div>
+                  <div class="imported-detail" *ngIf="selectedMsg.importedCategory">
+                    {{ selectedMsg.importedCategory }}
+                    <span *ngIf="selectedMsg.importedSubcategory"> · {{ selectedMsg.importedSubcategory }}</span>
+                  </div>
+                </div>
               </div>
 
               <ng-container *ngIf="!selectedMsg.imported">
-                <div class="import-label">Add to budget category</div>
-                <div class="cat-grid">
-                  <button class="cat-chip-btn"
-                    *ngFor="let cat of importCategories"
-                    [class.active]="selectedMsg.importCategory === cat.key"
-                    (click)="selectedMsg.importCategory = cat.key"
-                    [style.border-color]="selectedMsg.importCategory === cat.key ? cat.color : 'transparent'"
-                    [style.background]="selectedMsg.importCategory === cat.key ? cat.color + '18' : '#f9fafb'">
-                    <span class="cat-chip-icon">{{ cat.icon }}</span>
-                    <span class="cat-chip-name" [style.color]="selectedMsg.importCategory === cat.key ? cat.color : '#6b7280'">
-                      {{ cat.shortName }}
-                    </span>
-                  </button>
+                <!-- Step 1: Category -->
+                <div class="import-step">
+                  <div class="import-step-label">
+                    <span class="step-num">1</span> Choose category
+                  </div>
+                  <div class="cat-grid">
+                    <button class="cat-chip-btn"
+                      *ngFor="let cat of importCategories"
+                      [class.active]="selectedMsg.importCategory === cat.key"
+                      (click)="selectCategory(selectedMsg, cat.key)"
+                      [style.border-color]="selectedMsg.importCategory === cat.key ? cat.color : 'transparent'"
+                      [style.background]="selectedMsg.importCategory === cat.key ? cat.color + '18' : '#f9fafb'">
+                      <span class="cat-chip-icon">{{ cat.icon }}</span>
+                      <span class="cat-chip-name" [style.color]="selectedMsg.importCategory === cat.key ? cat.color : '#6b7280'">
+                        {{ cat.shortName }}
+                      </span>
+                    </button>
+                  </div>
                 </div>
-                <button class="import-btn" (click)="importTransaction()" [disabled]="importing">
+
+                <!-- Step 2: Subcategory (appears after category picked) -->
+                <div class="import-step subcategory-step"
+                  *ngIf="selectedMsg.importCategory"
+                  [class.slide-in]="!!selectedMsg.importCategory">
+                  <div class="import-step-label">
+                    <span class="step-num">2</span> Choose subcategory
+                  </div>
+                  <div class="sub-grid">
+                    <button class="sub-chip-btn"
+                      *ngFor="let sub of getSubcategories(selectedMsg.importCategory)"
+                      [class.active]="selectedMsg.importSubcategory === sub.name"
+                      (click)="selectedMsg.importSubcategory = sub.name">
+                      <span class="sub-chip-name">{{ sub.name }}</span>
+                      <span class="sub-chip-limit">{{ sub.limit | inr:true }}</span>
+                    </button>
+                    <button class="sub-chip-btn skip-sub"
+                      [class.active]="selectedMsg.importSubcategory === '__skip__'"
+                      (click)="selectedMsg.importSubcategory = '__skip__'">
+                      <span class="sub-chip-name">Skip subcategory</span>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Confirm button -->
+                <button class="import-btn"
+                  *ngIf="selectedMsg.importCategory && selectedMsg.importSubcategory"
+                  (click)="importTransaction()"
+                  [disabled]="importing">
                   <ion-spinner *ngIf="importing" name="crescent" style="width:16px;height:16px;--color:white"></ion-spinner>
                   <ion-icon *ngIf="!importing" name="add-circle-outline"></ion-icon>
                   <span *ngIf="!importing">Add to Budget</span>
@@ -403,8 +452,8 @@ const PAGE_SIZE = 50;
       margin:8px 16px;
       background:rgba(59,130,246,0.1); border:1px solid rgba(59,130,246,0.2);
       border-radius:12px; padding:10px 14px; font-size:12px; color:#3b82f6;
-      ion-icon { font-size:16px; flex-shrink:0; }
     }
+    .platform-notice ion-icon { font-size:16px; flex-shrink:0; }
 
     /* Skeletons */
     .skel-list { padding:8px 16px; }
@@ -438,12 +487,14 @@ const PAGE_SIZE = 50;
       padding:8px 16px 6px;
     }
     .count-text { font-size:11px; color:#9ca3af; font-weight:500; }
+    .days-badge { background: rgba(124,58,237,0.12); color: #7c3aed; font-size: 9px; font-weight: 800; padding: 1px 7px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px; margin-left: 6px; }
+    .loading-more-text { display: flex; align-items: center; gap: 5px; font-size: 11px; color: #9ca3af; }
     .mark-all-btn {
       display:flex; align-items:center; gap:5px;
       background:transparent; border:none;
       font-size:12px; font-weight:600; color:#7c3aed; cursor:pointer;
-      ion-icon { font-size:15px; }
     }
+    .mark-all-btn ion-icon { font-size:15px; }
 
     /* Message list */
     .msg-list { padding:0 16px; }
@@ -525,12 +576,27 @@ const PAGE_SIZE = 50;
     .td-val { font-size:14px; font-weight:600; color:#111827; }
     .type-badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; &.debit{background:#fee2e2;color:#ef4444} &.credit{background:#d1fae5;color:#10b981} }
     .conf-badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700; &.conf-high{background:#d1fae5;color:#065f46} &.conf-medium{background:#fef3c7;color:#92400e} &.conf-low{background:#fee2e2;color:#991b1b} }
-    .already-imported { display:flex; align-items:center; gap:7px; background:#d1fae5; color:#065f46; border-radius:12px; padding:10px 14px; font-size:13px; font-weight:600; ion-icon{font-size:18px} }
-    .import-label { font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
-    .cat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px; }
+    .already-imported { display:flex; align-items:center; gap:10px; background:#d1fae5; color:#065f46; border-radius:12px; padding:12px 14px; font-size:13px; font-weight:600; }
+    .already-imported ion-icon { font-size:22px; flex-shrink:0; }
+    .imported-detail { font-size:11px; font-weight:500; color:#047857; margin-top:2px; }
+    .import-step { margin-bottom:14px; }
+    .import-step-label { display:flex; align-items:center; gap:8px; font-size:11px; font-weight:700; color:#9ca3af; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:10px; }
+    .step-num { width:18px; height:18px; border-radius:50%; background:#6366f1; color:white; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .cat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
     .cat-chip-btn { border:2px solid transparent; border-radius:12px; padding:8px 4px; display:flex; flex-direction:column; align-items:center; gap:3px; cursor:pointer; transition:all 0.18s; background:#f9fafb; }
+    .cat-chip-btn.active { transform:scale(1.05); }
     .cat-chip-icon { font-size:18px; }
     .cat-chip-name { font-size:9px; font-weight:700; text-align:center; }
+    .subcategory-step { animation:fadeUp 0.25s cubic-bezier(0.16,1,0.3,1) both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+    .sub-grid { display:flex; flex-direction:column; gap:6px; }
+    .sub-chip-btn { display:flex; justify-content:space-between; align-items:center; padding:10px 14px; border:1.5px solid #e5e7eb; border-radius:12px; background:#f9fafb; cursor:pointer; transition:all 0.18s; }
+    .sub-chip-btn.active { border-color:#6366f1; background:rgba(99,102,241,0.08); }
+    .sub-chip-btn.skip-sub { border-style:dashed; }
+    .sub-chip-btn.skip-sub.active { border-color:#9ca3af; background:rgba(156,163,175,0.08); }
+    .sub-chip-name { font-size:13px; font-weight:600; color:#374151; }
+    .sub-chip-btn.active .sub-chip-name { color:#4f46e5; }
+    .sub-chip-limit { font-size:11px; font-weight:700; color:#9ca3af; }
     .import-btn { width:100%; padding:14px; border-radius:14px; border:none; background:linear-gradient(135deg,#7c3aed,#6d28d9); color:white; font-family:'Inter',sans-serif; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; box-shadow:0 6px 20px rgba(109,40,217,0.3); &:disabled{opacity:0.6;cursor:not-allowed} }
     .detail-actions { display:flex; gap:8px; margin-top:4px; }
     .da-btn { flex:1; padding:12px 8px; border-radius:14px; border:1.5px solid #e5e7eb; background:white; cursor:pointer; font-family:'Inter',sans-serif; font-size:12px; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:4px; transition:all 0.15s; ion-icon{font-size:18px} &:active{transform:scale(0.96)} }
@@ -554,6 +620,8 @@ export class MessagesPage implements OnInit {
   searchQuery = '';
   searchFocused = false;
   loading = false;
+  loadingMore = false;   // background load for older days
+  daysLoaded = 1;        // track how many days of SMS we've loaded
   selectedMsg: SmsMessage | null = null;
   importing = false;
 
@@ -587,40 +655,74 @@ export class MessagesPage implements OnInit {
 
   ngOnInit() { this.reload(); }
 
-  // ── Load all SMS (once), then paginate in-memory ──────────────
+  // ── Step 1: Load only TODAY (instant, ~10-30ms) ──────────────
   async reload() {
     this.loading = true;
     this.allMessages = [];
     this.filteredMessages = [];
     this.visibleMessages = [];
     this.currentPage = 1;
+    this.daysLoaded = 1;
+    this.smsReader.clearCache();
 
     try {
-      // Read ALL messages from device (or mock) — classification is cheap
-      const raw = await this.smsReader.readAllSMS(2000);
+      const raw = await this.smsReader.readTodaySMS();
       this.allMessages = raw.map((sms, i) => this.buildMessage(sms, i));
       this.applyFilter();
     } finally {
       this.loading = false;
+      // Step 2: silently load last 7 days in background after UI renders
+      setTimeout(() => this.loadOlderSMS(7), 100);
     }
   }
 
-  // ── Infinite scroll handler ───────────────────────────────────
-  async loadMore(event: any) {
-    // Small delay so spinner is visible
-    await new Promise(r => setTimeout(r, 400));
-
-    this.currentPage++;
-    const end = this.currentPage * PAGE_SIZE;
-    this.visibleMessages = this.filteredMessages.slice(0, end);
-
-    // Complete the infinite scroll
-    event.target.complete();
-
-    // Disable if we've loaded everything
-    if (this.visibleMessages.length >= this.filteredMessages.length) {
-      event.target.disabled = true;
+  // ── Background loader: extends history silently ───────────────
+  private async loadOlderSMS(days: number) {
+    if (this.loadingMore) return;
+    this.loadingMore = true;
+    try {
+      const raw = await this.smsReader.readLastNDays(days, 500);
+      const existingIds = new Set(this.allMessages.map(m => m.id));
+      const newMsgs = raw
+        .map((sms, i) => this.buildMessage(sms, this.allMessages.length + i))
+        .filter(m => !existingIds.has(m.id));
+      if (newMsgs.length > 0) {
+        this.allMessages = [...this.allMessages, ...newMsgs];
+        this.daysLoaded = days;
+        this.applyFilter();
+      }
+      // Auto-extend to 30 days after 7 days loads
+      if (days === 7) setTimeout(() => this.loadOlderSMS(30), 500);
+    } finally {
+      this.loadingMore = false;
     }
+  }
+
+  // ── Infinite scroll: render more rows, then fetch more days ───
+  async loadMore(event: any) {
+    await new Promise(r => setTimeout(r, 250));
+
+    // First: render next page of already-loaded messages
+    if (this.visibleMessages.length < this.filteredMessages.length) {
+      this.currentPage++;
+      this.visibleMessages = this.filteredMessages.slice(0, this.currentPage * PAGE_SIZE);
+      event.target.complete();
+      if (this.visibleMessages.length >= this.filteredMessages.length) {
+        event.target.disabled = true;
+      }
+      return;
+    }
+
+    // Then: fetch older SMS history (30 → 90 days)
+    if (this.daysLoaded < 90) {
+      const nextDays = this.daysLoaded >= 30 ? 90 : 30;
+      await this.loadOlderSMS(nextDays);
+      this.currentPage = 1;
+      this.applyFilter();
+    }
+
+    event.target.complete();
+    if (this.daysLoaded >= 90) event.target.disabled = true;
   }
 
   // ── Build message object from raw SMS ────────────────────────
@@ -748,28 +850,60 @@ export class MessagesPage implements OnInit {
   }
 
   // ── Import transaction ────────────────────────────────────────
+  // ── Category → subcategory selection ────────────────────────
+  selectCategory(msg: SmsMessage, key: CategoryKey) {
+    msg.importCategory = key;
+    msg.importSubcategory = undefined; // reset subcategory when category changes
+  }
+
+  getSubcategories(categoryKey: CategoryKey): { name: string; limit: number }[] {
+    const cat = DEFAULT_BUDGET_CATEGORIES.find(c => c.key === categoryKey);
+    return cat?.subcategories ?? [];
+  }
+
+  // ── Import transaction to Firestore budget ───────────────────
   async importTransaction() {
-    if (!this.selectedMsg?.parsed || !this.selectedMsg.importCategory) return;
+    const msg = this.selectedMsg;
+    if (!msg?.parsed || !msg.importCategory || !msg.importSubcategory) return;
+
     this.importing = true;
     try {
+      const subcategory = msg.importSubcategory === '__skip__' ? undefined : msg.importSubcategory;
+
       await this.budgetService.addTransaction({
-        amount: this.selectedMsg.parsed.amount,
-        type: this.selectedMsg.parsed.type,
-        category: this.selectedMsg.importCategory,
-        merchant: this.selectedMsg.parsed.merchant,
-        bank: this.selectedMsg.parsed.bank,
-        accountLast4: this.selectedMsg.parsed.accountLast4,
-        date: this.selectedMsg.parsed.date,
-        month: format(this.selectedMsg.parsed.date, 'yyyy-MM'),
+        amount: msg.parsed.amount,
+        type: msg.parsed.type,
+        category: msg.importCategory,
+        subcategory,
+        merchant: msg.parsed.merchant,
+        bank: msg.parsed.bank,
+        accountLast4: msg.parsed.accountLast4,
+        date: msg.parsed.date,
+        month: format(msg.parsed.date, 'yyyy-MM'),
         source: 'sms',
-        smsRaw: this.selectedMsg.parsed.raw,
+        smsRaw: msg.parsed.raw,
       });
-      const orig = this.allMessages.find(m => m.id === this.selectedMsg!.id);
-      if (orig) orig.imported = true;
-      this.selectedMsg.imported = true;
-      this.showToast('Added to budget ✓', 'success');
-    } catch {
-      this.showToast('Import failed. Try again.', 'danger');
+
+      // Get display names for success state
+      const catMeta = this.importCategories.find(c => c.key === msg.importCategory);
+      const orig = this.allMessages.find(m => m.id === msg.id);
+      const successData = {
+        imported: true,
+        importedCategory: catMeta ? `${catMeta.icon} ${catMeta.shortName}` : msg.importCategory,
+        importedSubcategory: subcategory,
+      };
+      if (orig) Object.assign(orig, successData);
+      Object.assign(msg, successData);
+
+      this.showToast(`✓ Added to ${catMeta?.shortName ?? 'Budget'}${subcategory ? ' · ' + subcategory.split(' ').slice(1).join(' ') : ''}`, 'success');
+    } catch (err: any) {
+      console.error('[Import] Failed:', err?.message ?? err);
+      const reason = err?.message?.includes('authenticated')
+        ? 'Please sign in to save transactions.'
+        : err?.message?.includes('permission')
+          ? 'Permission denied. Check Firestore rules.'
+          : 'Import failed. Try again.';
+      this.showToast(reason, 'danger');
     } finally {
       this.importing = false;
     }

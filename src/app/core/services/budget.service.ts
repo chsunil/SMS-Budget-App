@@ -15,7 +15,9 @@ import {
   serverTimestamp,
   Timestamp
 } from '@angular/fire/firestore';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Auth, authState } from '@angular/fire/auth';
+import { Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
+import { filter, take } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 import {
   MonthlyBudget,
@@ -30,9 +32,28 @@ import { format } from 'date-fns';
 export class BudgetService {
   private firestore = inject(Firestore);
   private authService = inject(AuthService);
+  private auth = inject(Auth);
 
   private _currentMonth$ = new BehaviorSubject<string>(this.currentMonthKey());
   readonly currentMonth$ = this._currentMonth$.asObservable();
+
+  // ── Await-safe UID: waits up to 5s for Firebase to rehydrate auth ──
+  // Fixes "Not authenticated" on fast page loads / app resume
+  private async getUid(): Promise<string> {
+    // Fast path: auth already ready
+    if (this.auth.currentUser?.uid) return this.auth.currentUser.uid;
+
+    // Slow path: wait for Firebase to emit a non-null user (up to 5s)
+    const user = await firstValueFrom(
+      authState(this.auth).pipe(
+        filter(u => u !== null),
+        take(1)
+      )
+    ).catch(() => null);
+
+    if (user?.uid) return user.uid;
+    throw new Error('Not authenticated');
+  }
 
   // ── Month helpers ─────────────────────────────
   currentMonthKey(): string {
@@ -45,7 +66,7 @@ export class BudgetService {
 
   // ── Budget CRUD ───────────────────────────────
   async getOrCreateBudget(month: string, income: number = 88500): Promise<MonthlyBudget> {
-    const uid = this.authService.currentUser?.uid;
+    const uid = await this.getUid();
     if (!uid) throw new Error('Not authenticated');
 
     const budgetRef = doc(this.firestore, `users/${uid}/budgets/${month}`);
@@ -89,30 +110,38 @@ export class BudgetService {
   // Real-time budget listener
   watchBudget(month: string): Observable<MonthlyBudget | null> {
     return new Observable(observer => {
-      const uid = this.authService.currentUser?.uid;
-      if (!uid) { observer.next(null); return; }
+      // Use sync currentUser first, fall back to authState for async rehydration
+      const startWatch = (uid: string) => {
+        const ref = doc(this.firestore, `users/${uid}/budgets/${month}`);
+        return onSnapshot(ref, snap => {
+          if (snap.exists()) {
+            observer.next({ id: snap.id, ...snap.data() } as MonthlyBudget);
+          } else {
+            observer.next(null);
+          }
+        });
+      };
 
-      const ref = doc(this.firestore, `users/${uid}/budgets/${month}`);
-      return onSnapshot(ref, snap => {
-        if (snap.exists()) {
-          observer.next({ id: snap.id, ...snap.data() } as MonthlyBudget);
-        } else {
-          observer.next(null);
-        }
-      });
+      if (this.auth.currentUser?.uid) {
+        return startWatch(this.auth.currentUser.uid);
+      }
+      // Auth not ready yet — wait for it
+      const sub = authState(this.auth).pipe(filter(u => !!u), take(1))
+        .subscribe(u => { if (u) startWatch(u.uid); else observer.next(null); });
+      return () => sub.unsubscribe();
     });
   }
 
   // Patch any fields on a budget document
   async patchBudget(month: string, patch: Partial<MonthlyBudget>): Promise<void> {
-    const uid = this.authService.currentUser?.uid;
+    const uid = await this.getUid();
     if (!uid) return;
     const ref = doc(this.firestore, `users/${uid}/budgets/${month}`);
     await updateDoc(ref, { ...patch, updatedAt: serverTimestamp() });
   }
 
   async updateCategorySpent(month: string, categoryKey: CategoryKey, amount: number, isDebit: boolean) {
-    const uid = this.authService.currentUser?.uid;
+    const uid = await this.getUid();
     if (!uid) return;
 
     const budget = await this.getOrCreateBudget(month);
@@ -143,7 +172,7 @@ export class BudgetService {
     amount: number,
     isDebit: boolean
   ): Promise<void> {
-    const uid = this.authService.currentUser?.uid;
+    const uid = await this.getUid();
     if (!uid) return;
 
     const budget = await this.getOrCreateBudget(month);
@@ -166,7 +195,7 @@ export class BudgetService {
 
   // ── Transactions ──────────────────────────────
   async addTransaction(txn: Omit<Transaction, 'id' | 'userId' | 'createdAt'>): Promise<string> {
-    const uid = this.authService.currentUser?.uid;
+    const uid = await this.getUid();
     if (!uid) throw new Error('Not authenticated');
 
     const colRef = collection(this.firestore, `users/${uid}/transactions`);
@@ -194,28 +223,33 @@ export class BudgetService {
 
   watchTransactions(month: string): Observable<Transaction[]> {
     return new Observable(observer => {
-      const uid = this.authService.currentUser?.uid;
-      if (!uid) { observer.next([]); return; }
+      const startWatch = (uid: string) => {
+        const q = query(
+          collection(this.firestore, `users/${uid}/transactions`),
+          where('month', '==', month),
+          orderBy('date', 'desc')
+        );
+        return onSnapshot(q, snap => {
+          const txns = snap.docs.map(d => ({
+            id: d.id,
+            ...d.data(),
+            date: (d.data()['date'] as Timestamp).toDate()
+          })) as Transaction[];
+          observer.next(txns);
+        });
+      };
 
-      const q = query(
-        collection(this.firestore, `users/${uid}/transactions`),
-        where('month', '==', month),
-        orderBy('date', 'desc')
-      );
-
-      return onSnapshot(q, snap => {
-        const txns = snap.docs.map(d => ({
-          id: d.id,
-          ...d.data(),
-          date: (d.data()['date'] as Timestamp).toDate()
-        })) as Transaction[];
-        observer.next(txns);
-      });
+      if (this.auth.currentUser?.uid) {
+        return startWatch(this.auth.currentUser.uid);
+      }
+      const sub = authState(this.auth).pipe(filter(u => !!u), take(1))
+        .subscribe(u => { if (u) startWatch(u.uid); else observer.next([]); });
+      return () => sub.unsubscribe();
     });
   }
 
   async deleteTransaction(txnId: string, txn: Transaction): Promise<void> {
-    const uid = this.authService.currentUser?.uid;
+    const uid = await this.getUid();
     if (!uid) return;
 
     await deleteDoc(doc(this.firestore, `users/${uid}/transactions/${txnId}`));

@@ -10,6 +10,10 @@ import { RouterModule } from '@angular/router';
   template: `
     <ion-tabs>
       <ion-tab-bar slot="bottom">
+ <ion-tab-button tab="messages" href="/tabs/messages">
+          <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
+          <ion-label>Messages</ion-label>
+        </ion-tab-button>
 
         <ion-tab-button tab="dashboard" href="/tabs/dashboard">
           <ion-icon name="grid-outline"></ion-icon>
@@ -26,16 +30,12 @@ import { RouterModule } from '@angular/router';
           <ion-label>Txns</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="messages" href="/tabs/messages">
-          <ion-icon name="chatbubble-ellipses-outline"></ion-icon>
-          <ion-label>Messages</ion-label>
+        <ion-tab-button tab="wallet" href="/tabs/wallet">
+          <ion-icon name="wallet-outline"></ion-icon>
+          <ion-label>Wallet</ion-label>
         </ion-tab-button>
 
-        <ion-tab-button tab="settings" href="/tabs/settings">
-          <ion-icon name="person-circle-outline"></ion-icon>
-          <ion-label>Profile</ion-label>
-        </ion-tab-button>
-
+       
       </ion-tab-bar>
     </ion-tabs>
   `,
@@ -47,4 +47,4 @@ import { RouterModule } from '@angular/router';
     }
   `]
 })
-export class TabsPage {}
+export class TabsPage { }

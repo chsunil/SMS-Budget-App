@@ -29,9 +29,9 @@ const routes: Routes = [
           import('../messages/messages.module').then(m => m.MessagesPageModule)
       },
       {
-        path: 'reports',
+        path: 'wallet',
         loadChildren: () =>
-          import('../reports/reports.module').then(m => m.ReportsPageModule)
+          import('../wallet/wallet.module').then(m => m.WalletPageModule)
       },
       {
         path: 'settings',
@@ -47,4 +47,4 @@ const routes: Routes = [
   imports: [TabsPage, RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class TabsPageModule {}
+export class TabsPageModule { }
